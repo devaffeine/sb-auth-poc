@@ -5,8 +5,8 @@ import com.devaffeine.auth.dto.AuthRequest
 import com.devaffeine.auth.dto.JwtToken
 import com.devaffeine.auth.dto.UserRequest
 import com.devaffeine.auth.dto.UserResponse
-import com.devaffeine.auth.service.UserService
 import com.devaffeine.auth.service.JwtService
+import com.devaffeine.auth.service.UserService
 import org.springframework.http.HttpStatus
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*

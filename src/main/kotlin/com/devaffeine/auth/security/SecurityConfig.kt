@@ -23,7 +23,11 @@ class SecurityConfig(
 ) : WebFluxConfigurer {
     @Bean
     fun filterChain(http: ServerHttpSecurity): SecurityWebFilterChain? {
-        val permitAll = arrayOf("/sign-up", "/sign-in", "/actuator/**", "/**")
+        val permitAll = arrayOf(
+            "/sign-up", "/sign-in",
+            "/actuator/**",
+            "/api-docs/**", "/webjars/**", "/api-ui.html",
+        )
         return http
             .exceptionHandling()
             .authenticationEntryPoint { exchange, _ ->

@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType
 import org.springframework.test.web.reactive.server.WebTestClient
-import org.springframework.test.web.reactive.server.expectBody
 
 @SpringBootTest
 class AuthControllerTests {
@@ -21,6 +20,14 @@ class AuthControllerTests {
     lateinit var mapper: ObjectMapper
 
     lateinit var client: WebTestClient
+
+    companion object {
+        fun randomUser() = UserRequest(
+            name = System.currentTimeMillis().toString(),
+            username = System.currentTimeMillis().toString(),
+            password = System.currentTimeMillis().toString()
+        )
+    }
 
     @BeforeEach
     fun setup() {
@@ -34,7 +41,22 @@ class AuthControllerTests {
     }
 
     @Test
-    fun whenSignUp_thenShouldGetCreatedStatus() {
+    fun whenSignUp_thenShouldGetCreatedStatusAndToken() {
+        val userRequest = randomUser()
+        val request = mapper.writeValueAsString(userRequest)
+        val exchange = client.post()
+            .uri("/sign-up")
+            .contentType(MediaType.APPLICATION_JSON)
+            .bodyValue(request)
+            .exchange()
+        exchange.expectStatus().isCreated
+        exchange.expectBody()
+            .jsonPath("\$.token").isNotEmpty
+            .jsonPath("\$.expiresAt").isNotEmpty
+    }
+
+    @Test
+    fun whenSignUp_thenShouldNotGetCreatedStatus() {
         val userRequest = randomUser()
         val request = mapper.writeValueAsString(userRequest)
         client.post()
@@ -44,27 +66,14 @@ class AuthControllerTests {
             .exchange()
             .expectStatus()
             .isCreated
-    }
-
-    @Test
-    fun whenSignUp_thenShouldNotGetCreatedStatus() {
-        val userRequest = randomUser()
-        val request = mapper.writeValueAsString(userRequest)
-        client.post()
-                .uri("/sign-up")
-                .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(request)
-                .exchange()
-                .expectStatus()
-                .isCreated
 
         client.post()
-                .uri("/sign-up")
-                .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(request)
-                .exchange()
-                .expectStatus()
-                .is4xxClientError
+            .uri("/sign-up")
+            .contentType(MediaType.APPLICATION_JSON)
+            .bodyValue(request)
+            .exchange()
+            .expectStatus()
+            .is4xxClientError
     }
 
     @Test
@@ -86,29 +95,21 @@ class AuthControllerTests {
         val userRequest = randomUser()
         val request = mapper.writeValueAsString(userRequest)
         client.post()
-                .uri("/sign-up")
-                .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(request)
-                .exchange()
-                .expectStatus()
-                .isCreated
+            .uri("/sign-up")
+            .contentType(MediaType.APPLICATION_JSON)
+            .bodyValue(request)
+            .exchange()
+            .expectStatus()
+            .isCreated
 
-        val exch = client.post()
-                .uri("/sign-in")
-                .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(request)
-                .exchange()
-
-        exch.expectStatus().isOk
-        exch.expectBody().jsonPath("\$.token").isNotEmpty
-                         .jsonPath("\$.expiresAt").isNotEmpty
-    }
-
-    companion object {
-        fun randomUser() = UserRequest(
-                name = System.currentTimeMillis().toString(),
-                username = System.currentTimeMillis().toString(),
-                password = System.currentTimeMillis().toString()
-        )
+        val exchange = client.post()
+            .uri("/sign-in")
+            .contentType(MediaType.APPLICATION_JSON)
+            .bodyValue(request)
+            .exchange()
+        exchange.expectStatus().isOk
+        exchange.expectBody()
+            .jsonPath("\$.token").isNotEmpty
+            .jsonPath("\$.expiresAt").isNotEmpty
     }
 }

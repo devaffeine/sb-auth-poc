@@ -2,8 +2,8 @@ package com.devaffeine.auth.security
 
 import com.devaffeine.auth.dto.JwtToken
 import com.devaffeine.auth.model.JwtAuth
-import com.devaffeine.auth.service.UserService
 import com.devaffeine.auth.service.JwtService
+import com.devaffeine.auth.service.UserService
 import org.springframework.http.HttpHeaders
 import org.springframework.security.authentication.ReactiveAuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken

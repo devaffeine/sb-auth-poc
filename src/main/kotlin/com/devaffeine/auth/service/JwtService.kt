@@ -11,9 +11,8 @@ import org.springframework.stereotype.Service
 import reactor.core.publisher.Mono
 import java.security.Key
 import java.time.OffsetDateTime
-import java.util.*
+import java.util.Date
 import kotlin.random.Random
-
 
 @Service
 class JwtService(
@@ -49,12 +48,11 @@ class JwtService(
 
     fun parseUsername(token: String?): Mono<String> {
         if (token != null) {
-            val theToken = if (token.contains(" ")) token.split(" ")[1] else token
             val jwt = Jwts.parserBuilder()
                 .setSigningKey(signInKey)
                 .requireIssuer(issuer)
                 .build()
-                .parseClaimsJws(theToken)
+                .parseClaimsJws(token)
             if (jwt.body.expiration.after(Date())) {
                 return Mono.just(jwt.body.subject)
             }

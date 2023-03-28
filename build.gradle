@@ -19,6 +19,7 @@ ext {
     jjwtVersion = '0.11.5'
     r2dbcMysqlVersion = '0.8.2.RELEASE'
     micrometerVersion = '1.10.5'
+    springdocVersion = '2.0.4'
 }
 
 dependencies {
@@ -28,10 +29,10 @@ dependencies {
     implementation 'org.jetbrains.kotlin:kotlin-reflect'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-reactor'
     implementation 'org.liquibase:liquibase-core'
+    implementation "org.springdoc:springdoc-openapi-starter-webflux-ui:$springdocVersion"
     implementation 'org.springframework.boot:spring-boot-starter-data-r2dbc'
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
-    implementation 'org.springdoc:springdoc-openapi-starter-webflux-ui:2.0.4'
 
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
@@ -39,8 +40,8 @@ dependencies {
     runtimeOnly "dev.miku:r2dbc-mysql:$r2dbcMysqlVersion"
     runtimeOnly "io.jsonwebtoken:jjwt-impl:$jjwtVersion"
     runtimeOnly "io.jsonwebtoken:jjwt-jackson:$jjwtVersion"
-    runtimeOnly "org.springframework.boot:spring-boot-starter-actuator"
     runtimeOnly "io.micrometer:micrometer-registry-prometheus:$micrometerVersion"
+    runtimeOnly "org.springframework.boot:spring-boot-starter-actuator"
 
     testImplementation 'io.projectreactor:reactor-test'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
