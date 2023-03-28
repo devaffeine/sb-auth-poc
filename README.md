@@ -13,9 +13,10 @@ DB_HOSTNAME=localhost; DB_PORT=3306; DB_USERNAME=auth_poc; DB_PASSWORD=auth_poc_
 
 ## Monitoring
 
-Check health status at http://localhost:8080/actuator/health
-Check metrics status at http://localhost:8080/actuator/metrics
+- Check health status at http://localhost:8080/actuator/health
+- Check metrics status at http://localhost:8080/actuator/metrics
 
 ## OpenAPI
 
-Check OpenAPI json at http://localhost:8080/api-docs
+- Check OpenAPI json at http://localhost:8080/api-docs
+- Check OpenAPI UI at http://localhost:8080/api-ui.html
