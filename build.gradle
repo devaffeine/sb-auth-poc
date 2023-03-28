@@ -1,0 +1,58 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
+plugins {
+    id 'org.springframework.boot' version '3.0.5'
+    id 'io.spring.dependency-management' version '1.1.0'
+    id 'org.jetbrains.kotlin.jvm' version '1.7.22'
+    id 'org.jetbrains.kotlin.plugin.spring' version '1.7.22'
+}
+
+group = 'com.devaffeine.auth'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '17'
+
+repositories {
+    mavenCentral()
+}
+
+ext {
+    jjwtVersion = '0.11.5'
+    r2dbcMysqlVersion = '0.8.2.RELEASE'
+}
+
+dependencies {
+    implementation 'com.fasterxml.jackson.module:jackson-module-kotlin'
+    implementation "io.jsonwebtoken:jjwt-api:$jjwtVersion"
+    implementation 'io.projectreactor.kotlin:reactor-kotlin-extensions'
+    implementation 'org.jetbrains.kotlin:kotlin-reflect'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-reactor'
+    implementation 'org.liquibase:liquibase-core'
+    implementation 'org.springframework.boot:spring-boot-starter-data-r2dbc'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'
+
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+
+    runtimeOnly 'com.mysql:mysql-connector-j'
+    runtimeOnly "dev.miku:r2dbc-mysql:$r2dbcMysqlVersion"
+    runtimeOnly "io.jsonwebtoken:jjwt-impl:$jjwtVersion"
+    runtimeOnly "io.jsonwebtoken:jjwt-jackson:$jjwtVersion"
+
+    testImplementation 'io.projectreactor:reactor-test'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.security:spring-security-test'
+
+    testRuntimeOnly 'com.h2database:h2'
+    testRuntimeOnly 'io.r2dbc:r2dbc-h2'
+}
+
+tasks.withType(KotlinCompile).configureEach {
+    kotlinOptions {
+        freeCompilerArgs = ['-Xjsr305=strict']
+        jvmTarget = '17'
+    }
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
