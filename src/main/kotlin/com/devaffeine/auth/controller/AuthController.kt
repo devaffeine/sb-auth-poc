@@ -19,7 +19,6 @@ class AuthController(val userService: UserService, val jwtService: JwtService) {
     @ResponseStatus(HttpStatus.CREATED)
     fun signUp(@RequestBody userRequest: UserRequest): Mono<JwtToken> {
         return userService.saveUser(userRequest.toUser())
-            .switchIfEmpty(Mono.error(ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid user")))
             .flatMap { user -> jwtService.createToken(user) }
     }
 
