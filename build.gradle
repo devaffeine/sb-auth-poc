@@ -67,3 +67,7 @@ tasks.named('test') {
 tasks.named('processResources') {
     expand(project.properties)
 }
+
+bootBuildImage {
+    imageName = "devaffeine/auth-poc:${version}"
+}

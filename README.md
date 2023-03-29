@@ -41,6 +41,7 @@ Run app:
 
 ## TODO
 
+ - reduce docker image size
  - checkout how to add application metrics to prometheus
  - checkout how to measure latency of requests
  - build with github actions
