@@ -62,3 +62,7 @@ tasks.withType(KotlinCompile).configureEach {
 tasks.named('test') {
     useJUnitPlatform()
 }
+
+tasks.named('processResources') {
+    expand(project.properties)
+}

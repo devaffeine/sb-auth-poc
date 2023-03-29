@@ -1,6 +1,7 @@
 package com.devaffeine.auth.service
 
 import com.devaffeine.auth.domain.AuthUser
+import com.devaffeine.auth.exceptions.InvalidCredentialsException
 import com.devaffeine.auth.exceptions.UsernameAlreadyExistsException
 import com.devaffeine.auth.repository.UserRepository
 import org.springframework.dao.DuplicateKeyException
@@ -9,8 +10,9 @@ import reactor.core.publisher.Mono
 
 @Service
 class UserService(val userRepository: UserRepository) {
-    fun findUserByUsernameAndPassword(username: String, password: String): Mono<AuthUser> {
+    fun signIn(username: String, password: String): Mono<AuthUser> {
         return userRepository.findByUsernameAndPassword(username, password)
+                .switchIfEmpty(Mono.error(InvalidCredentialsException("Invalid credentials")))
     }
 
     fun findUserByUsername(username: String): Mono<AuthUser> {

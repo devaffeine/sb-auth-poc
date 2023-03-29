@@ -19,7 +19,7 @@ import org.springframework.web.reactive.config.EnableWebFlux
 @SpringBootApplication
 class AuthApplication {
     @Bean
-    fun openAPI(@Value("\${app.version:0}") appVersion: String): OpenAPI {
+    fun openAPI(@Value("\${info.app.version:0}") appVersion: String): OpenAPI {
         val info = Info()
             .title("Auth API")
             .description("Spring Boot Auth PoC project")

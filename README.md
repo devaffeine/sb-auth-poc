@@ -37,3 +37,15 @@ Run app:
 
 - Check health status at http://localhost:8080/actuator/health
 - Check metrics at http://localhost:8080/actuator/metrics
+
+
+## TODO
+
+ - checkout how to add application metrics to prometheus
+ - build with github actions
+ - add integration tests with postman
+ - add integration tests with testcontainers
+ - add integration tests with k6
+ - add integration tests with jmeter
+ - add integration tests with newman
+ - add logging for splunk
