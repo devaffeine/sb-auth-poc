@@ -10,22 +10,38 @@ Spring Boot Auth PoC project
 ### Environment variables:
 
 ```
-JWT_SECRET_KEY=404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970;
-DB_HOSTNAME=localhost; DB_PORT=3306; DB_USERNAME=auth_poc; DB_PASSWORD=auth_poc_pass; DB_NAME=auth_poc
+JWT_SECRET_KEY=404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
+DB_HOSTNAME=localhost
+DB_PORT=3306
+DB_USERNAME=auth_poc
+DB_PASSWORD=auth_poc_pass
+DB_NAME=auth_poc
 ```
 
 ### Run local
 
-Start database:
+Using docker compose:
 
 ```
 docker compose up
 ```
 
-Run app:
+Running standalone:
 
 ```
 ./gradlew bootRun
+```
+
+### Containerizing
+
+Using buildpacks:
+```
+./gradlew bootBuildImage
+```
+
+Using jib:
+```
+./gradlew jibDockerBuild
 ```
 
 ## OpenAPI
@@ -41,10 +57,9 @@ Run app:
 
 ## TODO
 
- - reduce docker image size
- - checkout how to add application metrics to prometheus
- - checkout how to measure latency of requests
- - build with github actions
- - add integration tests with jmeter
- - add integration tests with newman
- - add logging for splunk
+- checkout how to add application metrics to prometheus
+- checkout how to measure latency of requests
+- build with github actions
+- add integration tests with jmeter
+- add integration tests with newman
+- add logging for splunk
