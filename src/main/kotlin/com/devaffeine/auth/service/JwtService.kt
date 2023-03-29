@@ -1,7 +1,7 @@
 package com.devaffeine.auth.service
 
-import com.devaffeine.auth.model.AuthUser
 import com.devaffeine.auth.dto.JwtToken
+import com.devaffeine.auth.model.AuthUser
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
 import io.jsonwebtoken.io.Decoders

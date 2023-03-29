@@ -1,8 +1,8 @@
 package com.devaffeine.auth.service
 
-import com.devaffeine.auth.model.AuthUser
 import com.devaffeine.auth.exceptions.InvalidCredentialsException
 import com.devaffeine.auth.exceptions.UsernameAlreadyExistsException
+import com.devaffeine.auth.model.AuthUser
 import com.devaffeine.auth.repository.UserRepository
 import org.springframework.dao.DuplicateKeyException
 import org.springframework.stereotype.Service

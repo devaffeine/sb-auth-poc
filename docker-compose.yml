@@ -27,6 +27,7 @@ services:
           memory: "128M"
 
   auth-poc:
+    build: .
     image: devaffeine/auth-poc:0.0.1-SNAPSHOT
     depends_on:
       mysql:
