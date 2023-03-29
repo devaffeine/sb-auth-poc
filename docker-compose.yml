@@ -11,6 +11,12 @@ services:
       MYSQL_PASSWORD: auth_poc_pass
       MYSQL_ROOT_PASSWORD: root_pass
       MYSQL_DATABASE: auth_poc
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost", "-uroot", "-p${MYSQL_ROOT_PASSWORD}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
     deploy:
       resources:
         limits:
@@ -21,6 +27,10 @@ services:
           memory: "128M"
 
   auth-poc:
+    image: devaffeine/auth-poc:0.0.1-SNAPSHOT
+    depends_on:
+      mysql:
+        condition: service_healthy
     ports:
       - "8080:8080"
     environment:
@@ -30,7 +40,6 @@ services:
       DB_USERNAME: auth_poc
       DB_PASSWORD: auth_poc_pass
       DB_NAME: auth_poc
-    image: devaffeine/auth:0.0.1-SNAPSHOT
     deploy:
       resources:
         limits:
