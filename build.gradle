@@ -10,6 +10,7 @@ plugins {
 group = 'com.devaffeine.auth'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '17'
+description = 'Proof of Concept for SQL-based large scale authentication service'
 
 repositories {
     mavenCentral()
