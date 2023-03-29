@@ -1,6 +1,6 @@
 package com.devaffeine.auth.dto
 
-import com.devaffeine.auth.domain.AuthUser
+import com.devaffeine.auth.model.AuthUser
 import jakarta.validation.constraints.NotEmpty
 import jakarta.validation.constraints.Size
 

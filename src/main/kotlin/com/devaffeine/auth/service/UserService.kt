@@ -1,6 +1,6 @@
 package com.devaffeine.auth.service
 
-import com.devaffeine.auth.domain.AuthUser
+import com.devaffeine.auth.model.AuthUser
 import com.devaffeine.auth.exceptions.InvalidCredentialsException
 import com.devaffeine.auth.exceptions.UsernameAlreadyExistsException
 import com.devaffeine.auth.repository.UserRepository

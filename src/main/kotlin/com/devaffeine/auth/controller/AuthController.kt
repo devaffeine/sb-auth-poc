@@ -1,11 +1,10 @@
 package com.devaffeine.auth.controller
 
-import com.devaffeine.auth.domain.AuthUser
+import com.devaffeine.auth.model.AuthUser
 import com.devaffeine.auth.dto.AuthRequest
 import com.devaffeine.auth.dto.JwtToken
 import com.devaffeine.auth.dto.UserRequest
 import com.devaffeine.auth.dto.UserResponse
-import com.devaffeine.auth.exceptions.InvalidCredentialsException
 import com.devaffeine.auth.service.JwtService
 import com.devaffeine.auth.service.UserService
 import io.swagger.v3.oas.annotations.Operation

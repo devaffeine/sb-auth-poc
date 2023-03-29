@@ -1,4 +1,4 @@
-package com.devaffeine.auth.domain
+package com.devaffeine.auth.model
 
 import jakarta.validation.constraints.NotEmpty
 import jakarta.validation.constraints.Size

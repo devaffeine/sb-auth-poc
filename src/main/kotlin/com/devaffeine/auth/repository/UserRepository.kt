@@ -1,6 +1,6 @@
 package com.devaffeine.auth.repository
 
-import com.devaffeine.auth.domain.AuthUser
+import com.devaffeine.auth.model.AuthUser
 import org.springframework.data.r2dbc.repository.R2dbcRepository
 import reactor.core.publisher.Mono
 
