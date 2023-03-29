@@ -19,10 +19,11 @@ import org.springframework.web.reactive.config.EnableWebFlux
 @SpringBootApplication
 class AuthApplication {
     @Bean
-    fun openAPI(@Value("\${info.app.version:0}") appVersion: String): OpenAPI {
+    fun openAPI(@Value("\${info.app.version:0}") appVersion: String,
+                @Value("\${info.app.description:}") appDescription: String): OpenAPI {
         val info = Info()
             .title("Auth API")
-            .description("Spring Boot Auth PoC project")
+            .description(appDescription)
             .version("v$appVersion")
         val jwtComponent = Components().addSecuritySchemes(
             "${JwtToken.tokenType} JWT",
