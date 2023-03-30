@@ -83,7 +83,7 @@ jib {
     }
     container {
         jvmFlags = []
-        mainClass = 'com.devaffeine.auth.AuthApplication'
+        mainClass = 'com.devaffeine.auth.AuthApplicationKt'
         ports = ['8080']
         format = 'OCI'
     }
