@@ -22,25 +22,25 @@ DB_NAME=auth_poc
 
 Using docker compose:
 
-```
+```bash
 docker compose up
 ```
 
 Running standalone:
 
-```
+```bash
 ./gradlew bootRun
 ```
 
 ### Containerizing
 
 Using buildpacks:
-```
+```bash
 ./gradlew bootBuildImage
 ```
 
 Using jib:
-```
+```bash
 ./gradlew jibDockerBuild
 ```
 
@@ -54,12 +54,19 @@ Using jib:
 - Check health status at http://localhost:8080/actuator/health
 - Check metrics at http://localhost:8080/actuator/metrics
 
-
 ## TODO
 
 - checkout how to add application metrics to prometheus
 - checkout how to measure latency of requests
 - build with github actions
-- add integration tests with jmeter
 - add integration tests with newman
 - add logging for splunk
+
+## K6 Testing
+
+- Check https://k6.io/docs/getting-started/installation/ for installation
+
+```bash
+k6 run --vus 100 --duration 60s k6/basic-load.js
+```
+ 
