@@ -60,14 +60,20 @@ Using jib:
 
 - Install [k6](https://k6.io/docs/getting-started/installation/)
 
-### Smoke test
+### Configuration
 
-- *--vus*: Virtual users. Optional, defaults to 5
-- *--duration*: Duration of tests. Optional, defaults to 1m (a minute)
 - *BASE_URL*: API base URL. Optional, defaults to *http://localhost:8080*
 
+### Smoke test
+
 ```bash
-k6 run --vus 5 --duration 1m k6/smoke-test.js --env BASE_URL=https://todo.url
+k6 run k6/smoke-test.js --env BASE_URL=https://todo.url
+```
+
+### Load test
+
+```bash
+k6 run k6/load-test.js --env BASE_URL=https://todo.url
 ```
 
 ## TODO
