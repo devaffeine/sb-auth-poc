@@ -128,4 +128,27 @@ class AuthControllerTests {
             .jsonPath("\$.token").isNotEmpty
             .jsonPath("\$.expiresAt").isNotEmpty
     }
+
+    @Test
+    fun whenSignIn_withInvalidPassword_thenShouldThrow401() {
+        val userRequest = randomUser()
+        val request = mapper.writeValueAsString(userRequest)
+        client.post()
+            .uri("/sign-up")
+            .contentType(MediaType.APPLICATION_JSON)
+            .bodyValue(request)
+            .exchange()
+            .expectStatus()
+            .isCreated
+
+        val authRequest = AuthRequest(userRequest.username, userRequest.password + "Invalid")
+        val signInRequest = mapper.writeValueAsString(authRequest)
+        client.post()
+            .uri("/sign-in")
+            .contentType(MediaType.APPLICATION_JSON)
+            .bodyValue(signInRequest)
+            .exchange()
+            .expectStatus()
+            .isUnauthorized
+    }
 }

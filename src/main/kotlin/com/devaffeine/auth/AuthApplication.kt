@@ -12,6 +12,8 @@ import org.springframework.boot.runApplication
 import org.springframework.context.annotation.Bean
 import org.springframework.data.r2dbc.repository.config.EnableR2dbcRepositories
 import org.springframework.http.HttpHeaders
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
+import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.web.reactive.config.EnableWebFlux
 
 @EnableR2dbcRepositories
@@ -19,8 +21,10 @@ import org.springframework.web.reactive.config.EnableWebFlux
 @SpringBootApplication
 class AuthApplication {
     @Bean
-    fun openAPI(@Value("\${info.app.version:0}") appVersion: String,
-                @Value("\${info.app.description:}") appDescription: String): OpenAPI {
+    fun openAPI(
+        @Value("\${info.app.version:0}") appVersion: String,
+        @Value("\${info.app.description:}") appDescription: String
+    ): OpenAPI {
         val info = Info()
             .title("Auth API")
             .description(appDescription)
@@ -37,6 +41,11 @@ class AuthApplication {
             .info(info)
             .components(jwtComponent)
             .addSecurityItem(SecurityRequirement().addList("${JwtToken.tokenType} JWT"))
+    }
+
+    @Bean
+    fun passwordEncoder(): PasswordEncoder {
+        return BCryptPasswordEncoder()
     }
 }
 

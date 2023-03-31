@@ -48,7 +48,7 @@ class AuthUserRepositoryTests {
             .expectNextCount(1)
             .verifyComplete()
         userRepository
-            .findByUsernameAndPassword(username, password)
+            .findByUsername(username)
             .take(Duration.ofSeconds(1))
             .`as`(StepVerifier::create)
             .expectNextCount(1)
