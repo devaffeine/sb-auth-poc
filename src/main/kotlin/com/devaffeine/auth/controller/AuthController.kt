@@ -32,10 +32,10 @@ class AuthController(val userService: UserService, val jwtService: JwtService) {
         ]
     )
     fun signUp(@RequestBody userRequest: UserRequest): Mono<JwtToken> {
-        logger.info("signing up user: ${userRequest.name}")
+        logger.debug("signing up user: ${userRequest.name}")
         return userService.saveUser(userRequest.toUser())
             .flatMap { user -> jwtService.createToken(user) }
-            .doOnSuccess { logger.info("signing up user: ${userRequest.name} successful") }
+            .doOnSuccess { logger.debug("signing up user: ${userRequest.name} successful") }
             .doOnError { logger.error("error signing up user: ${userRequest.name} ${it.message}") }
     }
 
@@ -47,10 +47,10 @@ class AuthController(val userService: UserService, val jwtService: JwtService) {
         ]
     )
     fun signIn(@RequestBody auth: AuthRequest): Mono<JwtToken> {
-        logger.info("signing in user: ${auth.username}")
+        logger.debug("signing in user: ${auth.username}")
         return userService.signIn(auth.username, auth.password)
             .flatMap { user -> jwtService.createToken(user) }
-            .doOnSuccess { logger.info("signing in user: ${auth.username} successful") }
+            .doOnSuccess { logger.debug("signing in user: ${auth.username} successful") }
             .doOnError { logger.error("error signing in user: ${auth.username} ${it.message}") }
     }
 
@@ -62,7 +62,7 @@ class AuthController(val userService: UserService, val jwtService: JwtService) {
         ]
     )
     fun me(@AuthenticationPrincipal authUser: AuthUser): Mono<UserResponse> {
-        logger.info("getting profile: ${authUser.username}")
+        logger.debug("getting profile: ${authUser.username}")
         return Mono.just(UserResponse(authUser))
     }
 }

@@ -3,7 +3,7 @@ import { randomString } from 'https://jslib.k6.io/k6-utils/1.2.0/index.js';
 import http from 'k6/http';
 
 export const options = {
-    vus: 10,
+    vus: 5,
     duration: '1m0s',
 };
 
@@ -19,24 +19,27 @@ export default function () {
     };
     const userJson = JSON.stringify(user);
 
-    const res = http.post(url('/sign-up'), userJson, jsonParams());
-    console.log('Sign up to', url('/sign-up'), 'jsonParams()', jsonParams());
-    check(res, {
+    const signUpRes = http.post(url('/sign-up'), userJson, jsonParams());
+    check(signUpRes, {
         'sign-up has status 201': (r) => r.status === 201,
-        'sign-up hast token': (r) => r.body.includes('token'),
+        'sign-up has token': (r) => r.body.includes('token'),
     });
 
-    for (let i = 0; i < 2; i++) {
-        const resp = http.post(url('/sign-in'), userJson, jsonParams());
-        check(res, {
+    for (let i = 0; i < 5; i++) {
+        const signInRes = http.post(url('/sign-in'), userJson, jsonParams());
+        check(signInRes, {
             'sign-in has status 200': (r) => r.status === 200,
-            'sign-in hast token': (r) => r.body.includes('token'),
+            'sign-in has token': (r) => r.body.includes('token'),
         });
 
-        const jsonResp = resp.json();
-        http.get(url('/me'), jsonParams({
-            'Authorization': 'Bearer ' + jsonResp['token'],
+        const jsonResp = signInRes.json();
+        const meRes = http.get(url('/me'), jsonParams({
+            'Authorization': `${jsonResp['type']} ${jsonResp['token']}`,
         }));
+        check(meRes, {
+            'me has status 200': (r) => r.status === 200,
+            'me has name': (r) => r.body.includes('name'),
+        });
     }
 }
 
