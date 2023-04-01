@@ -1,4 +1,4 @@
-import { randomUser, signUpUser, signInUser, userProfile } from './common.js';
+import { apiUrl, randomUser, signUpUser, signInUser, userProfile } from './common.js';
 
 export const options = {
     stages: [
@@ -22,7 +22,7 @@ export const options = {
 };
 
 export function setup() {
-    console.log('Running load tests...');
+    console.log(`Running load tests on ${apiUrl('')}...`);
 }
 
 export default function () {

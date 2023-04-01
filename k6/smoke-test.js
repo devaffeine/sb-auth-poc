@@ -1,4 +1,4 @@
-import { randomUser, signUpUser, signInUser, userProfile } from './common.js';
+import { apiUrl, randomUser, signUpUser, signInUser, userProfile } from './common.js';
 
 export const options = {
     vus: 5,
@@ -6,7 +6,7 @@ export const options = {
 };
 
 export function setup() {
-    console.log('Running smoke tests...');
+    console.log(`Running smoke tests on ${apiUrl('')}...`);
 }
 
 export default function () {
