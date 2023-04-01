@@ -42,9 +42,6 @@ export function userProfile(token) {
     });
 }
 
-const baseUrl = __ENV.BASE_URL || 'http://localhost:8080';
-const url = (endpoint) => `${baseUrl}${endpoint}`;
-
 const jsonParams = (headers = {}) => {
     const headersMap = {
         'Content-Type': 'application/json',
@@ -54,3 +51,15 @@ const jsonParams = (headers = {}) => {
         headers: headersMap,
     };
 };
+
+const createBaseUrl = () => {
+    const baseUrl = __ENV.BASE_URL || 'http://localhost:8080';
+    const apiPrefix = '/auth/v1';
+    if (!baseUrl.endsWith(apiPrefix)) {
+        return baseUrl + apiPrefix;
+    }
+    return baseUrl;
+};
+
+const baseUrl = createBaseUrl();
+const url = (endpoint) => `${baseUrl}${endpoint}`;

@@ -9,6 +9,8 @@ import io.swagger.v3.oas.models.security.SecurityScheme
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
+import org.springframework.boot.web.server.WebServerFactoryCustomizer
+import org.springframework.boot.web.servlet.server.ConfigurableServletWebServerFactory
 import org.springframework.context.annotation.Bean
 import org.springframework.data.r2dbc.repository.config.EnableR2dbcRepositories
 import org.springframework.http.HttpHeaders
@@ -20,6 +22,13 @@ import org.springframework.web.reactive.config.EnableWebFlux
 @EnableWebFlux
 @SpringBootApplication
 class AuthApplication {
+    @Bean
+    fun apiCustomizer(): WebServerFactoryCustomizer<ConfigurableServletWebServerFactory> {
+        return WebServerFactoryCustomizer<ConfigurableServletWebServerFactory> {
+            it.setContextPath(Constants.apiPrefix)
+        }
+    }
+
     @Bean
     fun openAPI(
         @Value("\${info.app.version:0}") appVersion: String,

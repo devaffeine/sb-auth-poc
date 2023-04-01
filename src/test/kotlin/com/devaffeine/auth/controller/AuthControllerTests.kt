@@ -22,6 +22,9 @@ class AuthControllerTests {
     lateinit var client: WebTestClient
 
     companion object {
+        const val signUpUri = "/sign-up"
+        const val signInUri = "/sign-in"
+
         fun randomUser(name: String? = null) = UserRequest(
             name = name ?: System.currentTimeMillis().toString(),
             username = System.currentTimeMillis().toString(),
@@ -48,7 +51,7 @@ class AuthControllerTests {
         val userRequest = randomUser()
         val request = mapper.writeValueAsString(userRequest)
         val exchange = client.post()
-            .uri("/sign-up")
+            .uri(signUpUri)
             .contentType(MediaType.APPLICATION_JSON)
             .bodyValue(request)
             .exchange()
@@ -63,7 +66,7 @@ class AuthControllerTests {
         val userRequest = randomUser()
         val request = mapper.writeValueAsString(userRequest)
         client.post()
-            .uri("/sign-up")
+            .uri(signUpUri)
             .contentType(MediaType.APPLICATION_JSON)
             .bodyValue(request)
             .exchange()
@@ -71,7 +74,7 @@ class AuthControllerTests {
             .isCreated
 
         client.post()
-            .uri("/sign-up")
+            .uri(signUpUri)
             .contentType(MediaType.APPLICATION_JSON)
             .bodyValue(request)
             .exchange()
@@ -84,7 +87,7 @@ class AuthControllerTests {
         val userRequest = randomUser(name = "")
         val request = mapper.writeValueAsString(userRequest)
         client.post()
-            .uri("/sign-up")
+            .uri(signUpUri)
             .contentType(MediaType.APPLICATION_JSON)
             .bodyValue(request)
             .exchange()
@@ -98,7 +101,7 @@ class AuthControllerTests {
         val authRequest = AuthRequest(username, username)
         val request = mapper.writeValueAsString(authRequest)
         client.post()
-            .uri("/sign-in")
+            .uri(signInUri)
             .contentType(MediaType.APPLICATION_JSON)
             .bodyValue(request)
             .exchange()
@@ -111,7 +114,7 @@ class AuthControllerTests {
         val userRequest = randomUser()
         val request = mapper.writeValueAsString(userRequest)
         client.post()
-            .uri("/sign-up")
+            .uri(signUpUri)
             .contentType(MediaType.APPLICATION_JSON)
             .bodyValue(request)
             .exchange()
@@ -119,7 +122,7 @@ class AuthControllerTests {
             .isCreated
 
         val exchange = client.post()
-            .uri("/sign-in")
+            .uri(signInUri)
             .contentType(MediaType.APPLICATION_JSON)
             .bodyValue(request)
             .exchange()
@@ -134,7 +137,7 @@ class AuthControllerTests {
         val userRequest = randomUser()
         val request = mapper.writeValueAsString(userRequest)
         client.post()
-            .uri("/sign-up")
+            .uri(signUpUri)
             .contentType(MediaType.APPLICATION_JSON)
             .bodyValue(request)
             .exchange()
@@ -144,7 +147,7 @@ class AuthControllerTests {
         val authRequest = AuthRequest(userRequest.username, userRequest.password + "Invalid")
         val signInRequest = mapper.writeValueAsString(authRequest)
         client.post()
-            .uri("/sign-in")
+            .uri(signInUri)
             .contentType(MediaType.APPLICATION_JSON)
             .bodyValue(signInRequest)
             .exchange()

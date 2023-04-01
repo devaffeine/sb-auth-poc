@@ -56,21 +56,29 @@ Using jib:
 - Check [health status](http://localhost:8080/actuator/health)
 - Check [metrics](http://localhost:8080/actuator/metrics)
 
-## K6 Testing
+### Testing
+
+### Unit tests
+
+```bash
+./gradlew clean test
+```
+
+### K6 Tests
 
 - Install [k6](https://k6.io/docs/getting-started/installation/)
 
-### Configuration
+#### Configuration
 
 - *BASE_URL*: API base URL. Optional, defaults to *http://localhost:8080*
 
-### Smoke test
+#### Smoke test
 
 ```bash
 k6 run k6/smoke-test.js --env BASE_URL=https://todo.url
 ```
 
-### Load test
+#### Load test
 
 ```bash
 k6 run k6/load-test.js --env BASE_URL=https://todo.url
