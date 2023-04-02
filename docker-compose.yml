@@ -1,21 +1,22 @@
 version: "3.9"
 
 services:
+
   mysql:
     hostname: mysql-auth-poc.local
     image: mysql:8-oracle
     ports:
       - "3306:3306"
     environment:
-      MYSQL_USER: auth_poc
-      MYSQL_PASSWORD: auth_poc_pass
-      MYSQL_ROOT_PASSWORD: root_pass
-      MYSQL_DATABASE: auth_poc
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
     healthcheck:
       test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost", "-uroot", "-p${MYSQL_ROOT_PASSWORD}"]
-      interval: 5s
-      timeout: 5s
-      retries: 10
+      interval: 10s
+      timeout: 10s
+      retries: 20
       start_period: 10s
     deploy:
       resources:
@@ -26,20 +27,62 @@ services:
           cpus: "1"
           memory: "128M"
 
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.7.0
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    environment:
+      node.name: elasticsearch
+      discovery.type: single-node
+      xpack.license.self_generated.type: basic
+      xpack.security.enabled: false
+      xpack.security.http.ssl.enabled: false
+      ES_JAVA_OPTS: -Xmx512m -Xms512m
+    healthcheck:
+      test:
+        ["CMD-SHELL", "curl -s http://localhost:9200 | grep -q '\"tagline\" : \"You Know, for Search\"'"]
+      interval: 10s
+      timeout: 10s
+      retries: 20
+      start_period: 10s
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.7.0
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+    ports:
+      - "5601:5601"
+    environment:
+      ELASTICSEARCH_URL: http://elasticsearch:9200
+      ELASTICSEARCH_HOSTS: http://elasticsearch:9200
+      ELASTICSEARCH_SSL_VERIFICATIONMODE: none
+      elasticsearch.ssl.verificationMode: none
+    healthcheck:
+      test:
+        ["CMD-SHELL", "curl -s -I http://localhost:5601 | grep -q 'HTTP/1.1 200 OK'"]
+      interval: 10s
+      timeout: 10s
+      retries: 20
+      start_period: 10s
+
   auth-poc:
     image: devaffeine/auth-poc:0.0.1-SNAPSHOT
     depends_on:
       mysql:
         condition: service_healthy
+      kibana:
+        condition: service_healthy
     ports:
       - "8080:8080"
     environment:
-      JWT_SECRET_KEY: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY}
       DB_HOSTNAME: mysql
       DB_PORT: 3306
-      DB_USERNAME: auth_poc
-      DB_PASSWORD: auth_poc_pass
-      DB_NAME: auth_poc
+      DB_USERNAME: ${MYSQL_USER}
+      DB_PASSWORD: ${MYSQL_PASSWORD}
+      DB_NAME: ${MYSQL_DATABASE}
     deploy:
       resources:
         limits:
