@@ -2,11 +2,10 @@
 <configuration>
     <appender name="Console"
               class="ch.qos.logback.core.ConsoleAppender">
-        <layout class="ch.qos.logback.classic.PatternLayout">
-            <Pattern>
-                %black(%d{ISO8601}) %highlight(%-5level) [%blue(%t)] %yellow(%C{1.}): %msg%n%throwable
-            </Pattern>
-        </layout>
+        <withJansi>true</withJansi>
+        <encoder>
+            <pattern>%yellow(%d{HH:mm:ss.SSS}) [%t] %highlight(%-5level) %cyan(%logger{20}) - %msg%n %ex{full}</pattern>
+        </encoder>
     </appender>
 
     <appender name="Splunk"
@@ -16,18 +15,10 @@
         <token>\${SPLUNK_TOKEN}</token>
         <batch_size_count>10</batch_size_count>
         <disableCertificateValidation>true</disableCertificateValidation>
-        <layout class="ch.qos.logback.classic.PatternLayout">
-            <Pattern>
-                %black(%d{ISO8601}) %highlight(%-5level) [%blue(%t)] %yellow(%C{1.}): %msg%n%throwable
-            </Pattern>
-        </layout>
     </appender>
 
     <root level="info">
         <appender-ref ref="Console" />
-    </root>
-
-    <logger name="com.devaffeine.auth" level="info" additivity="false">
         <appender-ref ref="Splunk"/>
-    </logger>
+    </root>
 </configuration>

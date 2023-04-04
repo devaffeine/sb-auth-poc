@@ -6,9 +6,12 @@ import io.swagger.v3.oas.models.OpenAPI
 import io.swagger.v3.oas.models.info.Info
 import io.swagger.v3.oas.models.security.SecurityRequirement
 import io.swagger.v3.oas.models.security.SecurityScheme
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.SpringBootApplication
+import org.springframework.boot.context.event.ApplicationReadyEvent
 import org.springframework.boot.runApplication
+import org.springframework.context.ApplicationListener
 import org.springframework.context.annotation.Bean
 import org.springframework.data.r2dbc.repository.config.EnableR2dbcRepositories
 import org.springframework.http.HttpHeaders
@@ -19,7 +22,9 @@ import org.springframework.web.reactive.config.EnableWebFlux
 @EnableR2dbcRepositories
 @EnableWebFlux
 @SpringBootApplication
-class AuthApplication {
+class AuthApplication : ApplicationListener<ApplicationReadyEvent> {
+    private val logger = LoggerFactory.getLogger(AuthApplication::class.java)
+
     @Bean
     fun openAPI(
         @Value("\${info.app.version:0}") appVersion: String,
@@ -46,6 +51,10 @@ class AuthApplication {
     @Bean
     fun passwordEncoder(): PasswordEncoder {
         return BCryptPasswordEncoder()
+    }
+
+    override fun onApplicationEvent(event: ApplicationReadyEvent) {
+        logger.info("Application started!")
     }
 }
 
