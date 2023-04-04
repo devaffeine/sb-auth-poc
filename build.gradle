@@ -15,12 +15,14 @@ description = 'Proof of Concept for SQL-based large scale authentication service
 
 repositories {
     mavenCentral()
+    maven { url = uri('https://splunk.jfrog.io/splunk/ext-releases-local') }
 }
 
 ext {
     jjwtVersion = '0.11.5'
     micrometerVersion = '1.10.5'
     r2dbcMysqlVersion = '0.8.2.RELEASE'
+    splunkVersion = '1.11.7'
     springdocVersion = '2.0.4'
 }
 
@@ -40,11 +42,13 @@ dependencies {
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
     runtimeOnly 'com.mysql:mysql-connector-j'
+    runtimeOnly "com.splunk.logging:splunk-library-javalogging:$splunkVersion"
     runtimeOnly "dev.miku:r2dbc-mysql:$r2dbcMysqlVersion"
     runtimeOnly "io.jsonwebtoken:jjwt-impl:$jjwtVersion"
     runtimeOnly "io.jsonwebtoken:jjwt-jackson:$jjwtVersion"
     runtimeOnly "io.micrometer:micrometer-registry-prometheus:$micrometerVersion"
-    runtimeOnly "org.springframework.boot:spring-boot-starter-actuator"
+    runtimeOnly 'org.springframework.boot:spring-boot-starter-actuator'
+
 
     testImplementation 'io.projectreactor:reactor-test'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'

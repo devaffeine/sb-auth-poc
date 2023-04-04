@@ -7,22 +7,13 @@ Spring Boot Auth PoC project
 - Install [JDK 17](https://openjdk.org/projects/jdk/17/) or superior
 - Install [Docker compose](https://docs.docker.com/compose/)
 
-### Environment variables:
+### Config
 
-```
-JWT_SECRET_KEY=404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
-DB_HOSTNAME=localhost
-DB_PORT=3306
-DB_USERNAME=auth_poc
-DB_PASSWORD=auth_poc_pass
-DB_NAME=auth_poc
-```
+- Copy *.env-sample* to *.env* and edit it.
 
 ### Run local
 
 Using docker compose:
-
-- Copy *.env-sample* to *.env* and edit it.
 
 ```bash
 docker compose up -d
@@ -88,8 +79,8 @@ k6 run k6/load-test.js --env BASE_URL=https://todo.url
 
 ## TODO
 
+- add logging for splunk
 - checkout how to add application metrics to prometheus
 - checkout how to measure latency of requests
 - build with github actions
 - add integration tests with newman
-- add logging for splunk
