@@ -22,8 +22,10 @@ DB_NAME=auth_poc
 
 Using docker compose:
 
+- Copy *.env-sample* to *.env* and edit it.
+
 ```bash
-docker compose up
+docker compose up -d
 ```
 
 Running standalone:
