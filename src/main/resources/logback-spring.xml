@@ -13,8 +13,12 @@
         <url>\${SPLUNK_URL}</url>
         <index>AUTH_POC</index>
         <token>\${SPLUNK_TOKEN}</token>
+        <messageFormat>text</messageFormat>
         <batch_size_count>10</batch_size_count>
         <disableCertificateValidation>true</disableCertificateValidation>
+        <encoder class="ch.qos.logback.classic.PatternLayout">
+            <pattern>%msg</pattern>
+        </encoder>
     </appender>
 
     <root level="info">
