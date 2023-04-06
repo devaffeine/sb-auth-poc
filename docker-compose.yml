@@ -48,7 +48,7 @@ services:
       test:
         [
           "CMD-SHELL",
-          "curl -D- http://localhost:8088/services/collector/health | grep -q 'HEC is healthy'"
+          "curl http://localhost:8088/services/collector/health | grep 'HEC is healthy'"
         ]
       interval: 10s
       timeout: 10s
@@ -74,6 +74,16 @@ services:
       DB_NAME: ${MYSQL_DATABASE}
       SPLUNK_URL: http://splunk:8088/
       SPLUNK_TOKEN: ${SPLUNK_TOKEN}
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "curl http://localhost:8080/actuator/health | grep UP"
+        ]
+      interval: 10s
+      timeout: 10s
+      retries: 20
+      start_period: 30s
     deploy:
       resources:
         limits:
@@ -82,3 +92,11 @@ services:
         reservations:
           cpus: "1"
           memory: "1G"
+
+  postman:
+    image: postman/newman:alpine
+    depends_on:
+      auth-poc:
+        condition: service_healthy
+    command:
+      run postman.json -k -r cli

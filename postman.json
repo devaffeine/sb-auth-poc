@@ -1,0 +1,189 @@
+{
+	"info": {
+		"_postman_id": "59200dc9-259b-418c-aab2-64c1e4ecdcb6",
+		"name": "auth",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "552368"
+	},
+	"item": [
+		{
+			"name": "sign-up",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Sign up response is 201 and has token\", function () {",
+							"    pm.response.to.have.status(201);",
+							"    pm.response.to.be.json;",
+							"    let response = pm.response.json();",
+							"    pm.expect(response).to.have.ownProperty(\"token\");",
+							"    pm.expect(response.type).to.equal(\"Bearer\");",
+							"    pm.environment.set(\"authToken\", response.token);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"{{usertitle}}\",\n    \"username\": \"{{username}}\",\n    \"password\": \"{{userpassword}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/sign-up",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"sign-up"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "sign-in",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Sign in response is 200 and has token\", function () {",
+							"    pm.response.to.have.status(200);",
+							"    pm.response.to.be.json;",
+							"    let response = pm.response.json();",
+							"    pm.expect(response).to.have.ownProperty(\"token\");",
+							"    pm.expect(response.type).to.equal(\"Bearer\");",
+							"    pm.environment.set(\"authToken\", response.token);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"username\": \"{{username}}\",\n    \"password\": \"{{userpassword}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/sign-in",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"sign-in"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "me",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Profile response is 200 and has user data\", function () {",
+							"    pm.response.to.have.status(200);",
+							"    pm.response.to.be.json;",
+							"    let response = pm.response.json();",
+							"    pm.expect(response.name).to.equal(pm.variables.get('usertitle'));",
+							"    pm.expect(response.username).to.equal(pm.variables.get('username'));",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{authToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/me",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"me"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:8080",
+			"type": "string"
+		},
+		{
+			"key": "authToken",
+			"value": "token",
+			"type": "string"
+		},
+		{
+			"key": "username",
+			"value": "user-name",
+			"type": "string"
+		},
+		{
+			"key": "userpassword",
+			"value": "user-pass",
+			"type": "string"
+		},
+		{
+			"key": "usertitle",
+			"value": "User Name",
+			"type": "string"
+		}
+	]
+}
