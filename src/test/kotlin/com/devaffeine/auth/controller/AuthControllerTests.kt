@@ -2,7 +2,6 @@ package com.devaffeine.auth.controller
 
 import com.devaffeine.auth.dto.AuthRequest
 import com.devaffeine.auth.dto.UserRequest
-import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
@@ -17,6 +16,7 @@ class AuthControllerTests {
     @Autowired
     lateinit var controller: AuthController
 
+    @Autowired
     lateinit var mapper: ObjectMapper
 
     lateinit var client: WebTestClient
@@ -34,9 +34,6 @@ class AuthControllerTests {
 
     @BeforeEach
     fun setup() {
-        mapper = ObjectMapper()
-        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL)
-        mapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY)
         client = WebTestClient.bindToController(controller).build()
     }
 

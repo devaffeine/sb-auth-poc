@@ -84,4 +84,3 @@ k6 run k6/load-test.js --env BASE_URL=https://todo.url
 - checkout how to measure latency of requests
 - build with github actions
 - add integration tests with newman
-- handle exceptions with spring boot

@@ -1,7 +1,7 @@
 import { apiUrl, randomUser, signUpUser, signInUser, userProfile } from './common.js';
 
 export const options = {
-    vus: 5,
+    vus: 20,
     duration: '1m0s',
 };
 
