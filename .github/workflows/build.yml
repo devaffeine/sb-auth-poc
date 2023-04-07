@@ -18,12 +18,6 @@ jobs:
           distribution: 'temurin'
       - name: Validate Gradle wrapper
         uses: gradle/wrapper-validation-action@v1
-      - name: Log in to the Container registry
-        uses: docker/login-action@v2.1.0
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
       - name: Build with Gradle
         uses: gradle/gradle-build-action@v2
         env:
@@ -43,4 +37,5 @@ jobs:
           arguments: publish
       - name: Publish Docker Image
         run: |
+          docker login ${{ env.REGISTRY }} -u ${{ github.actor }} -p ${{ secrets.GITHUB_TOKEN }}
           docker push ${{ env.REGISTRY }}/devaffeine/sb-auth-poc:latest
