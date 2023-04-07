@@ -92,13 +92,3 @@ services:
         reservations:
           cpus: "1"
           memory: "1G"
-
-  postman:
-    image: postman/newman:alpine
-    depends_on:
-      auth-poc:
-        condition: service_healthy
-    volumes:
-      - ./postman.json:/etc/newman/postman.json
-    command:
-      run /etc/newman/postman.json -k -r cli
