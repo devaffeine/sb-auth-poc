@@ -73,7 +73,7 @@ jib {
     }
     to {
         image = 'ghcr.io/devaffeine/sb-auth-poc'
-        tags = ["$version"]
+        tags = ["$version", 'latest']
         auth {
             username = System.getenv("GITHUB_ACTOR")
             password = System.getenv("GITHUB_TOKEN")
