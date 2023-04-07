@@ -98,5 +98,7 @@ services:
     depends_on:
       auth-poc:
         condition: service_healthy
+    volumes:
+      - ./postman.json:/etc/newman/postman.json
     command:
-      run postman.json -k -r cli
+      run /etc/newman/postman.json -k -r cli

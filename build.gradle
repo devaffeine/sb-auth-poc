@@ -66,13 +66,9 @@ tasks.named('processResources') {
     expand(project.properties)
 }
 
-bootBuildImage {
-    imageName = "devaffeine/auth-poc:$version"
-}
-
 jib {
     from {
-        image = 'eclipse-temurin:17-jre-alpine'
+        image = 'amazoncorretto:17'
     }
     to {
         image = 'devaffeine/auth-poc'

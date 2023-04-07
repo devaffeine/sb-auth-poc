@@ -162,7 +162,7 @@
 	"variable": [
 		{
 			"key": "baseUrl",
-			"value": "http://localhost:8080",
+			"value": "http://auth-poc:8080",
 			"type": "string"
 		},
 		{
