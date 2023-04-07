@@ -32,7 +32,6 @@ jobs:
           arguments: build jibDockerBuild
       - name: Newman Tests
         run: |
-          docker compose up postman
-      - name: Stop all Containers
-        run: |
-          docker compose down
+          cp .env.example .env
+          docker compose -f docker-compose-tests.yml up postman
+          docker compose -f docker-compose-tests.yml down
