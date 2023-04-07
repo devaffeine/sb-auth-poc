@@ -82,4 +82,4 @@ k6 run k6/load-test.js --env BASE_URL=https://todo.url
 - add docker logging for splunk
 - checkout how to add application metrics to prometheus
 - checkout how to measure latency of requests
-- build with github actions
+- newman test with github actions
