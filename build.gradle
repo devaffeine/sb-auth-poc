@@ -83,6 +83,11 @@ jib {
     }
 }
 
+task showVars() {
+    println System.getenv("GITHUB_ACTOR")
+    println System.getenv("GITHUB_TOKEN")
+}
+
 publishing {
     publications {
         mavenJava(MavenPublication) {
