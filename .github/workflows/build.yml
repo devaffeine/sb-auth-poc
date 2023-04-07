@@ -4,7 +4,6 @@ on: [push]
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
 
 jobs:
   build:
@@ -43,8 +42,5 @@ jobs:
         with:
           arguments: publish
       - name: Publish Docker Image
-        uses: gradle/gradle-build-action@v2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          arguments: jib
+        run: |
+          docker push ${{ env.REGISTRY }}/devaffeine/sb-auth-poc:latest
