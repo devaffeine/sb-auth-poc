@@ -72,7 +72,7 @@ jib {
         image = 'amazoncorretto:17'
     }
     to {
-        image = 'devaffeine/auth-poc'
+        image = 'ghcr.io/devaffeine/sb-auth-poc'
         tags = ["$version"]
     }
     container {
