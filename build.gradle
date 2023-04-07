@@ -4,6 +4,7 @@ plugins {
     id 'org.jetbrains.kotlin.jvm' version '1.8.0'
     id 'org.jetbrains.kotlin.plugin.spring' version '1.8.0'
     id 'org.springframework.boot' version '3.0.5'
+    id 'maven-publish'
 }
 
 group = 'com.devaffeine.auth'
@@ -79,5 +80,23 @@ jib {
         mainClass = 'com.devaffeine.auth.AuthApplicationKt'
         ports = ['8080']
         format = 'OCI'
+    }
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+        }
+    }
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = "https://maven.pkg.github.com/devaffeine/sb-auth-poc"
+            credentials {
+                username = System.getenv("GITHUB_ACTOR")
+                password = System.getenv("GITHUB_TOKEN")
+            }
+        }
     }
 }
