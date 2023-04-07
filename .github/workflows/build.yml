@@ -32,6 +32,6 @@ jobs:
           arguments: build jibDockerBuild
       - name: Newman Tests
         run: |
-          cp .env.example .env
+          cp .env-sample .env
           docker compose -f docker-compose-tests.yml up postman
           docker compose -f docker-compose-tests.yml down
