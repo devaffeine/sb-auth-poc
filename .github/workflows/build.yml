@@ -29,4 +29,10 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          arguments: build jib
+          arguments: build jibDockerBuild
+      - name: Newman Tests
+        run: |
+          docker compose up postman
+      - name: Stop all Containers
+        run: |
+          docker compose down
