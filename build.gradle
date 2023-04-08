@@ -67,6 +67,15 @@ tasks.named('processResources') {
     expand(project.properties)
 }
 
+def githubActor = System.getenv('GITHUB_ACTOR')
+if (githubActor == null) {
+    githubActor = 'github'
+}
+def githubToken = System.getenv('GITHUB_TOKEN')
+if (githubToken == null) {
+    githubToken = 'github_token'
+}
+
 jib {
     from {
         image = 'amazoncorretto:17'
@@ -75,8 +84,8 @@ jib {
         image = 'ghcr.io/devaffeine/sb-auth-poc'
         tags = ["$version", 'latest']
         auth {
-            username = System.getenv("GITHUB_ACTOR")
-            password = System.getenv("GITHUB_TOKEN")
+            username = githubActor
+            password = githubToken
         }
     }
     container {
@@ -88,8 +97,8 @@ jib {
 }
 
 task showVars() {
-    println System.getenv("GITHUB_ACTOR")
-    println System.getenv("GITHUB_TOKEN")
+    println githubActor
+    println githubToken
 }
 
 publishing {
@@ -103,8 +112,8 @@ publishing {
             name = "GitHubPackages"
             url = "https://maven.pkg.github.com/devaffeine/sb-auth-poc"
             credentials {
-                username = System.getenv("GITHUB_ACTOR")
-                password = System.getenv("GITHUB_TOKEN")
+                username = githubActor
+                password = githubToken
             }
         }
     }
