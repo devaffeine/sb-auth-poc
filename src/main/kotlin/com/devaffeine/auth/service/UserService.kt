@@ -13,7 +13,7 @@ import java.time.Duration
 class UserService(val userRepository: UserRepository, val passwordEncoder: PasswordEncoder) {
     fun signIn(username: String, password: String): Mono<AuthUser> {
         return userRepository.findByUsername(username)
-            .timeout(Duration.ofSeconds(1))
+            //.timeout(Duration.ofSeconds(1))
             .switchIfEmpty(Mono.error(InvalidCredentialsException()))
             .doOnNext {
                 val passwordMatch = passwordEncoder.matches(password, it.password)
@@ -25,14 +25,14 @@ class UserService(val userRepository: UserRepository, val passwordEncoder: Passw
 
     fun findUserByUsername(username: String): Mono<AuthUser> {
         return userRepository.findByUsername(username)
-            .timeout(Duration.ofSeconds(1))
+            //.timeout(Duration.ofSeconds(1))
     }
 
     fun saveUser(authUser: AuthUser): Mono<AuthUser> {
         val encodedPassword = passwordEncoder.encode(authUser.password)
         val user = AuthUser(authUser.id, authUser.name, authUser.username, encodedPassword)
         return userRepository.save(user)
-            .timeout(Duration.ofSeconds(1))
+            //.timeout(Duration.ofSeconds(1))
             .onErrorMap(AppExceptionHandler::mapException)
     }
 }
