@@ -11,13 +11,13 @@ export const options = {
         { duration: '1m', target: 0 }, // ramp-down to 0 users
     ],
     thresholds: {
-        checks: ['rate>0.95'], // the rate of successful checks should be higher than 95%
-        http_req_duration: [
+        'checks': ['rate>0.95'], // the rate of successful checks should be higher than 95%
+        'http_req_duration': [
             'p(90) < 1000', // 90% of requests must finish within 1s.
             'p(95) < 1200', // 95% of requests must finish within 1.2s.
             'p(99.9) < 1500', // 99.9% of requests must finish within 1.5s.
         ],
-        http_req_failed: ['rate<0.05'], // http errors should be less than 5%
+        'http_req_failed': ['rate<0.05'], // http errors should be less than 5%
     },
 };
 

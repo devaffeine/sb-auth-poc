@@ -15,10 +15,10 @@ export function randomUser() {
 
 export function signUpUser(user) {
     const userJson = JSON.stringify(user);
-    const resp = http.post(apiUrl('/sign-up'), userJson, jsonParams());
+    const resp = http.post(apiUrl('/sign-up'), userJson, jsonParams({}));
     check(resp, {
         'sign-up has status 201': (r) => r.status === 201,
-        'sign-up has token': (r) => r.body && r.body.includes('token'),
+        'sign-up has token': (r) => r.body && r.body.includes('token')
     });
     const jsonResp = resp.json();
     return `${jsonResp['type']} ${jsonResp['token']}`;
@@ -26,10 +26,10 @@ export function signUpUser(user) {
 
 export function signInUser(user) {
     const userJson = JSON.stringify(user);
-    const resp = http.post(apiUrl('/sign-in'), userJson, jsonParams());
+    const resp = http.post(apiUrl('/sign-in'), userJson, jsonParams({}));
     check(resp, {
         'sign-in has status 200': (r) => r.status === 200,
-        'sign-in has token': (r) => r.body && r.body.includes('token'),
+        'sign-in has token': (r) => r.body && r.body.includes('token')
     });
     const jsonResp = resp.json();
     return `${jsonResp['type']} ${jsonResp['token']}`;
@@ -37,7 +37,7 @@ export function signInUser(user) {
 
 export function userProfile(token) {
     const resp = http.get(apiUrl('/me'), jsonParams({
-        'Authorization': token,
+        'Authorization': token
     }));
     check(resp, {
         'me has status 200': (r) => r.status === 200,
