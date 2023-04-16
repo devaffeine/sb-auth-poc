@@ -22,7 +22,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.web.reactive.config.EnableWebFlux
 
-@EnableR2dbcRepositories
 @EnableWebFlux
 @SpringBootApplication
 class AuthApplication {
