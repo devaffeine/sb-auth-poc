@@ -1,4 +1,4 @@
-package com.devaffeine.auth.repository
+package com.devaffeine.auth.repository.ro
 
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Test
@@ -9,23 +9,23 @@ import reactor.test.StepVerifier
 import java.time.Duration
 
 @DataR2dbcTest
-class AuthUserRepositoryTests {
+class UserRoRepositoryTests {
     @Autowired
     lateinit var client: DatabaseClient
 
     @Autowired
-    lateinit var userRepository: UserRepository
+    lateinit var userRoRepository: UserRoRepository
 
     @Test
     fun contextLoads() {
         assertNotNull(client)
-        assertNotNull(userRepository)
+        assertNotNull(userRoRepository)
     }
 
     @Test
     fun testQueryNotExistent() {
         val username = "user-${System.currentTimeMillis()}"
-        userRepository
+        userRoRepository
             .findByUsername(username)
             .take(Duration.ofSeconds(1))
             .`as`(StepVerifier::create)
@@ -47,7 +47,7 @@ class AuthUserRepositoryTests {
             .`as`(StepVerifier::create)
             .expectNextCount(1)
             .verifyComplete()
-        userRepository
+        userRoRepository
             .findByUsername(username)
             .take(Duration.ofSeconds(1))
             .`as`(StepVerifier::create)

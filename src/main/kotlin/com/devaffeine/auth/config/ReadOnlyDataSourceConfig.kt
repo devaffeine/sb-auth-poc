@@ -6,8 +6,6 @@ import io.r2dbc.spi.ConnectionFactories
 import io.r2dbc.spi.ConnectionFactory
 import io.r2dbc.spi.ConnectionFactoryOptions
 import org.springframework.beans.factory.annotation.Qualifier
-import org.springframework.boot.autoconfigure.r2dbc.R2dbcProperties
-import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.data.r2dbc.core.DefaultReactiveDataAccessStrategy
@@ -16,43 +14,40 @@ import org.springframework.data.r2dbc.core.R2dbcEntityTemplate
 import org.springframework.data.r2dbc.dialect.MySqlDialect
 import org.springframework.data.r2dbc.repository.config.EnableR2dbcRepositories
 import org.springframework.r2dbc.core.DatabaseClient
-import java.time.Duration
 
 @Configuration
-@EnableR2dbcRepositories(entityOperationsRef = "roEntityTemplate")
+@EnableR2dbcRepositories(
+    entityOperationsRef = "roEntityTemplate",
+    basePackages = [
+        "com.devaffeine.auth.repository.ro"
+    ]
+)
 class ReadOnlyDataSourceConfig {
     @Bean
-    @ConfigurationProperties("spring.datasource.read-only")
-    @Qualifier(value = "roR2dbcProperties")
-    fun roR2dbcProperties(): R2dbcProperties? {
-        return R2dbcProperties()
-    }
-
-    @Bean
     @Qualifier(value = "roConnectionFactory")
-    fun roConnectionFactory(@Qualifier("roR2dbcProperties") props : R2dbcProperties): ConnectionFactory? {
-        val connectionFactory = ConnectionFactories.get(ConnectionFactoryOptions.builder()
-                .from(ConnectionFactoryOptions.parse(props.url))
-                .option(ConnectionFactoryOptions.USER, props.username)
-                .option(ConnectionFactoryOptions.PASSWORD, props.password)
-                .build())
-        val configuration = ConnectionPoolConfiguration.builder(connectionFactory)
-                .maxIdleTime(props.pool.maxIdleTime)
-                .initialSize(props.pool.initialSize)
-                .maxSize(props.pool.maxSize)
-                .maxCreateConnectionTime(Duration.ofSeconds(1))
+    fun roConnectionFactory(config: ReadOnlyConfig): ConnectionFactory {
+        val connectionFactory = ConnectionFactories.get(
+            ConnectionFactoryOptions.builder()
+                .from(ConnectionFactoryOptions.parse(config.url))
+                .option(ConnectionFactoryOptions.USER, config.username)
+                .option(ConnectionFactoryOptions.PASSWORD, config.password)
                 .build()
+        )
+        val configuration = ConnectionPoolConfiguration.builder(connectionFactory)
+            .maxIdleTime(config.pool.maxIdleTime)
+            .initialSize(config.pool.initialSize)
+            .maxSize(config.pool.maxSize)
+            .build()
         return ConnectionPool(configuration)
     }
 
     @Bean
-    fun roEntityTemplate(@Qualifier("roConnectionFactory") connectionFactory : ConnectionFactory) : R2dbcEntityOperations {
+    fun roEntityTemplate(@Qualifier("roConnectionFactory") factory: ConnectionFactory): R2dbcEntityOperations {
         val strategy = DefaultReactiveDataAccessStrategy(MySqlDialect.INSTANCE)
         val databaseClient = DatabaseClient.builder()
-                .connectionFactory(connectionFactory)
-                .bindMarkers(MySqlDialect.INSTANCE.bindMarkersFactory)
-                .build()
-
+            .connectionFactory(factory)
+            .bindMarkers(MySqlDialect.INSTANCE.bindMarkersFactory)
+            .build()
         return R2dbcEntityTemplate(databaseClient, strategy);
     }
 }

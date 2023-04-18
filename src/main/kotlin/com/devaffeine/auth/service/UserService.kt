@@ -3,16 +3,20 @@ package com.devaffeine.auth.service
 import com.devaffeine.auth.exceptions.AppExceptionHandler
 import com.devaffeine.auth.exceptions.InvalidCredentialsException
 import com.devaffeine.auth.model.AuthUser
-import com.devaffeine.auth.repository.UserRepository
+import com.devaffeine.auth.repository.ro.UserRoRepository
+import com.devaffeine.auth.repository.rw.UserRwRepository
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import reactor.core.publisher.Mono
-import java.time.Duration
 
 @Service
-class UserService(val userRepository: UserRepository, val passwordEncoder: PasswordEncoder) {
+class UserService(
+    val userRoRepo: UserRoRepository,
+    val userRwRepo: UserRwRepository,
+    val passwordEncoder: PasswordEncoder
+) {
     fun signIn(username: String, password: String): Mono<AuthUser> {
-        return userRepository.findByUsername(username)
+        return userRoRepo.findByUsername(username)
             //.timeout(Duration.ofSeconds(1))
             .switchIfEmpty(Mono.error(InvalidCredentialsException()))
             .doOnNext {
@@ -24,14 +28,14 @@ class UserService(val userRepository: UserRepository, val passwordEncoder: Passw
     }
 
     fun findUserByUsername(username: String): Mono<AuthUser> {
-        return userRepository.findByUsername(username)
-            //.timeout(Duration.ofSeconds(1))
+        return userRoRepo.findByUsername(username)
+        //.timeout(Duration.ofSeconds(1))
     }
 
     fun saveUser(authUser: AuthUser): Mono<AuthUser> {
         val encodedPassword = passwordEncoder.encode(authUser.password)
         val user = AuthUser(authUser.id, authUser.name, authUser.username, encodedPassword)
-        return userRepository.save(user)
+        return userRwRepo.save(user)
             //.timeout(Duration.ofSeconds(1))
             .onErrorMap(AppExceptionHandler::mapException)
     }
