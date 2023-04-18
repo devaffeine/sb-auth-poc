@@ -1,0 +1,9 @@
+Dockerfile
+.devbox
+.idea
+node_modules
+.env-sample
+.git
+.gitignore
+devbox.json
+qodana.yaml

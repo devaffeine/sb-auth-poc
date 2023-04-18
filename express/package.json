@@ -1,0 +1,31 @@
+{
+  "name": "auth-poc",
+  "version": "0.0.1",
+  "description": "Auth PoC",
+  "main": "index.js",
+  "scripts": {
+    "dev": "concurrently \"npx tsc --watch\" \"npx nodemon -q dist/index.js\"",
+    "build": "npx tsc",
+    "start": "node dist/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@types/jsonwebtoken": "^9.0.1",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.0",
+    "mysql2": "^3.2.0",
+    "reflect-metadata": "^0.1.13",
+    "sequelize": "^6.31.0",
+    "typedi": "^0.10.0"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.17",
+    "@types/node": "^18.15.11",
+    "concurrently": "^8.0.1",
+    "nodemon": "^2.0.22",
+    "typescript": "^5.0.4"
+  }
+}
