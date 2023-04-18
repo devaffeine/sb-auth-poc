@@ -1,8 +1,11 @@
 package com.devaffeine.auth.repository.ro
 
+import io.r2dbc.spi.ConnectionFactory
 import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.boot.test.autoconfigure.data.r2dbc.DataR2dbcTest
 import org.springframework.r2dbc.core.DatabaseClient
 import reactor.test.StepVerifier
@@ -11,10 +14,18 @@ import java.time.Duration
 @DataR2dbcTest
 class UserRoRepositoryTests {
     @Autowired
-    lateinit var client: DatabaseClient
+    @Qualifier("roConnectionFactory")
+    lateinit var factory: ConnectionFactory
+
+    private lateinit var client: DatabaseClient
 
     @Autowired
     lateinit var userRoRepository: UserRoRepository
+
+    @BeforeEach
+    fun setup() {
+        client = DatabaseClient.create(factory);
+    }
 
     @Test
     fun contextLoads() {

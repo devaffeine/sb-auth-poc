@@ -26,27 +26,33 @@ class ReadOnlyDataSourceConfig {
     @Bean
     @Qualifier(value = "roConnectionFactory")
     fun roConnectionFactory(config: ReadOnlyConfig): ConnectionFactory {
-        val connectionFactory = ConnectionFactories.get(
-            ConnectionFactoryOptions.builder()
-                .from(ConnectionFactoryOptions.parse(config.url))
-                .option(ConnectionFactoryOptions.USER, config.username)
-                .option(ConnectionFactoryOptions.PASSWORD, config.password)
-                .build()
-        )
-        val configuration = ConnectionPoolConfiguration.builder(connectionFactory)
-            .maxIdleTime(config.pool.maxIdleTime)
-            .initialSize(config.pool.initialSize)
-            .maxSize(config.pool.maxSize)
-            .build()
-        return ConnectionPool(configuration)
+        val builder = ConnectionFactoryOptions.builder().from(ConnectionFactoryOptions.parse(config.url))
+        if (config.username != null) {
+            builder.option(ConnectionFactoryOptions.USER, config.username)
+        }
+        if (config.password != null) {
+            builder.option(ConnectionFactoryOptions.PASSWORD, config.password)
+        }
+        val factory = ConnectionFactories.get(builder.build())
+        val factoryBuilder = ConnectionPoolConfiguration.builder(factory)
+        if (config.pool != null) {
+            factoryBuilder
+                .initialSize(config.pool.initialSize)
+                .maxSize(config.pool.maxSize)
+            if (config.pool.maxIdleTime != null) {
+                factoryBuilder.maxIdleTime(config.pool.maxIdleTime)
+            }
+        }
+        return ConnectionPool(factoryBuilder.build())
     }
 
     @Bean
     fun roEntityTemplate(@Qualifier("roConnectionFactory") factory: ConnectionFactory): R2dbcEntityOperations {
-        val strategy = DefaultReactiveDataAccessStrategy(MySqlDialect.INSTANCE)
+        val dialect = MySqlDialect.INSTANCE // todo: from config
+        val strategy = DefaultReactiveDataAccessStrategy(dialect)
         val databaseClient = DatabaseClient.builder()
             .connectionFactory(factory)
-            .bindMarkers(MySqlDialect.INSTANCE.bindMarkersFactory)
+            .bindMarkers(dialect.bindMarkersFactory)
             .build()
         return R2dbcEntityTemplate(databaseClient, strategy);
     }
