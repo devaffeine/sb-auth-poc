@@ -123,6 +123,7 @@ services:
       MYSQL_INNODB_NUM_MEMBERS: 3
     ports:
       - "6446:6446"
+      - "6447:6447"
     depends_on:
       mysql-server-1:
         condition: service_healthy

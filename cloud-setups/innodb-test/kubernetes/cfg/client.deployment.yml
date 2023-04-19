@@ -1,0 +1,54 @@
+kind: ConfigMap 
+apiVersion: v1 
+metadata:
+  name: jdbcconfig 
+data:
+  jdbc_url: jdbc:mysql://usersdb:6446/usersdb
+  jdbc_url_ro: jdbc:mysql://usersdb:6447/usersdb
+  jdbc_user: root
+  jdbc_pass: asd123
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: innodb-client
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: innodb-client
+  minReadySeconds: 10
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        app: innodb-client
+    spec:
+      containers:
+      - name: innodb-client-pod
+        image: innodb-registry.local:5000/mysql-client:latest
+        env:
+        - name: JDBC_URL
+          valueFrom:
+            configMapKeyRef:
+              name: jdbcconfig
+              key: jdbc_url
+        - name: JDBC_URL_RO
+          valueFrom:
+            configMapKeyRef:
+              name: jdbcconfig
+              key: jdbc_url_ro
+        - name: JDBC_USER
+          valueFrom:
+            configMapKeyRef:
+              name: jdbcconfig
+              key: jdbc_user
+        - name: JDBC_PASS
+          valueFrom:
+            configMapKeyRef:
+              name: jdbcconfig
+              key: jdbc_pass

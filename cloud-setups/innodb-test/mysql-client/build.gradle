@@ -1,0 +1,45 @@
+plugins {
+    id 'java'
+    id "com.google.cloud.tools.jib" version "3.3.1"
+}
+
+group 'org.example'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'com.mysql:mysql-connector-j:8.0.32'
+    implementation 'com.zaxxer:HikariCP:3.4.5'
+    implementation 'com.github.javafaker:javafaker:1.0.2'
+
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+jib {
+    from {
+        image = 'amazoncorretto:17-alpine-jdk'
+    }
+    to {
+        image = 'innodb-registry.local:5000/mysql-client'
+        tags = ['latest']
+    }
+    allowInsecureRegistries = true
+    container {
+        jvmFlags = [
+                '-Xms512m', '-Xmx5g',
+                '-XX:+ShowCodeDetailsInExceptionMessages',
+        ]
+        mainClass = 'innodb.test.Main'
+        ports = []
+        creationTime = "USE_CURRENT_TIMESTAMP"
+        workingDirectory = "/usr/local/"
+    }
+}

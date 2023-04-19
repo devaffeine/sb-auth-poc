@@ -1,3 +1,4 @@
+import { sleep } from 'k6';
 import { apiUrl, randomUser, signUpUser, signInUser, userProfile } from './common.js';
 
 export const options = {
@@ -12,6 +13,7 @@ export function setup() {
 export default function () {
     const user = randomUser();
     signUpUser(user);
+    sleep(5);
     for (let i = 0; i < 5; i++) {
         const token = signInUser(user);
         userProfile(token);

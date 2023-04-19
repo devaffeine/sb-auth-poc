@@ -1,0 +1,54 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+  # config.vm.define "ns1" do |cfg|
+  #   cfg.vm.hostname = "ns1.cloud.local"
+  #   cfg.vm.box = "ubuntu/jammy64"
+  #   cfg.vm.network "private_network", ip: "192.168.56.10"
+  #   cfg.vm.synced_folder "./ns1", "/etc/bind"
+
+  #   cfg.vm.provider "virtualbox" do |v|
+  #     v.memory = 8192
+  #     v.cpus = 4
+  #     v.customize ['modifyvm', :id, '--nested-hw-virt', 'on']
+  #   end
+
+  #   config.vm.provision "shell", inline: <<-SHELL
+  #     sudo apt install bind9 -y
+  #     sudo service named stop
+  #     sudo chmod 777 -R /etc/bind
+  #     sudo service named start
+  #   SHELL
+  # end
+
+  config.vm.define "s1" do |cfg|
+    cfg.vm.hostname = "s1.cloud.local"
+    cfg.vm.box = "ubuntu/jammy64"
+    cfg.vm.network "private_network", ip: "192.168.56.20"
+    # config.vm.synced_folder "../data", "/vagrant_data"
+
+    cfg.vm.provider "virtualbox" do |v|
+      v.memory = 8192
+      v.cpus = 4
+      v.customize ['modifyvm', :id, '--nested-hw-virt', 'on']
+    end
+
+    config.vm.provision "shell", inline: <<-SHELL
+      curl -sfL https://get.k3s.io | sh -
+    SHELL
+  end
+
+  config.vm.define "s2" do |cfg|
+    cfg.vm.hostname = "s2.cloud.local"
+    cfg.vm.box = "ubuntu/jammy64"
+    cfg.vm.network "private_network", ip: "192.168.56.21"
+    # config.vm.synced_folder "../data", "/vagrant_data"
+
+    cfg.vm.provider "virtualbox" do |v|
+      v.memory = 8192
+      v.cpus = 4
+      v.customize ['modifyvm', :id, '--nested-hw-virt', 'on']
+    end
+  end
+end
