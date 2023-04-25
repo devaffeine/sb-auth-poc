@@ -39,3 +39,4 @@ node_modules/
 
 ### OTHER ###
 .env
+/tests/data
