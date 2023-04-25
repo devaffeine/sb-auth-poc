@@ -1,4 +1,4 @@
-# sb-auth-poc
+# global-auth-cockroachdb
 
 Spring Boot Auth PoC project
 

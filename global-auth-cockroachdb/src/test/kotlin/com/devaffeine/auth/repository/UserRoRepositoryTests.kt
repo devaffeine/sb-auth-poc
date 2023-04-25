@@ -1,5 +1,6 @@
-package com.devaffeine.auth.repository.ro
+package com.devaffeine.auth.repository
 
+import com.devaffeine.auth.repository.UserRepository
 import io.r2dbc.spi.ConnectionFactory
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.BeforeEach
@@ -14,13 +15,12 @@ import java.time.Duration
 @DataR2dbcTest
 class UserRoRepositoryTests {
     @Autowired
-    @Qualifier("roConnectionFactory")
     lateinit var factory: ConnectionFactory
 
     private lateinit var client: DatabaseClient
 
     @Autowired
-    lateinit var userRoRepository: UserRoRepository
+    lateinit var userRepository: UserRepository
 
     @BeforeEach
     fun setup() {
@@ -30,13 +30,13 @@ class UserRoRepositoryTests {
     @Test
     fun contextLoads() {
         assertNotNull(client)
-        assertNotNull(userRoRepository)
+        assertNotNull(userRepository)
     }
 
     @Test
     fun testQueryNotExistent() {
         val username = "user-${System.currentTimeMillis()}"
-        userRoRepository
+        userRepository
             .findByUsername(username)
             .take(Duration.ofSeconds(1))
             .`as`(StepVerifier::create)
@@ -58,7 +58,7 @@ class UserRoRepositoryTests {
             .`as`(StepVerifier::create)
             .expectNextCount(1)
             .verifyComplete()
-        userRoRepository
+        userRepository
             .findByUsername(username)
             .take(Duration.ofSeconds(1))
             .`as`(StepVerifier::create)

@@ -46,6 +46,8 @@ dependencies {
     runtimeOnly "io.jsonwebtoken:jjwt-jackson:$jjwtVersion"
     runtimeOnly "io.micrometer:micrometer-registry-prometheus:$micrometerVersion"
     runtimeOnly 'org.springframework.boot:spring-boot-starter-actuator'
+    runtimeOnly 'org.postgresql:postgresql'
+    runtimeOnly 'org.postgresql:r2dbc-postgresql'
 
     testImplementation 'io.projectreactor:reactor-test'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
@@ -81,7 +83,7 @@ jib {
         image = 'amazoncorretto:17'
     }
     to {
-        image = 'ghcr.io/devaffeine/sb-auth-poc'
+        image = 'ghcr.io/devaffeine/global-auth-cockroachdb'
         tags = ["$version", 'latest']
         auth {
             username = githubActor
@@ -110,7 +112,7 @@ publishing {
     repositories {
         maven {
             name = "GitHubPackages"
-            url = "https://maven.pkg.github.com/devaffeine/sb-auth-poc"
+            url = "https://maven.pkg.github.com/devaffeine/global-auth-cockroachdb"
             credentials {
                 username = githubActor
                 password = githubToken

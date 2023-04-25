@@ -39,10 +39,37 @@ services:
    volumes:
      - "${PWD}/data/roach4:/cockroach/cockroach-data"
 
+ roach5:
+   hostname: roach5
+   image: cockroachdb/cockroach:latest
+   environment:
+     COCKROACH_DATABASE: auth_db
+   command: start --insecure --join=roach1,roach2,roach3
+   volumes:
+     - "${PWD}/data/roach5:/cockroach/cockroach-data"
+
+ roach6:
+   hostname: roach6
+   image: cockroachdb/cockroach:latest
+   environment:
+     COCKROACH_DATABASE: auth_db
+   command: start --insecure --join=roach1,roach2,roach3
+   volumes:
+     - "${PWD}/data/roach6:/cockroach/cockroach-data"
+
+ roach7:
+   hostname: roach7
+   image: cockroachdb/cockroach:latest
+   environment:
+     COCKROACH_DATABASE: auth_db
+   command: start --insecure --join=roach1,roach2,roach3
+   volumes:
+     - "${PWD}/data/roach7:/cockroach/cockroach-data"
+
  proxy:
    image: haproxy:latest
    ports:
      - "26257:26257"
      - "8080:8080"
    volumes:
-     - "haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg"
+     - "${PWD}/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg"
