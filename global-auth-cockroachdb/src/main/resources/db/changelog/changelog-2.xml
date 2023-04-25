@@ -6,8 +6,7 @@
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
     <changeSet id="2" author="h4j4x">
         <addColumn tableName="auth_user">
-            <column afterColumn="id"
-                    name="name"
+            <column name="name"
                     type="varchar(255)">
                 <constraints nullable="false"/>
             </column>

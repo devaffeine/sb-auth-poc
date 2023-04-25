@@ -1,8 +1,8 @@
 import { check } from 'k6';
 import { randomString } from 'https://jslib.k6.io/k6-utils/1.2.0/index.js';
-import http from 'tests/k6/http';
+import http from 'k6/http';
 
-const baseUrl = __ENV.BASE_URL || 'http://localhost:8080';
+const baseUrl = __ENV.BASE_URL || 'http://localhost:8090';
 export const apiUrl = (endpoint) => `${baseUrl}${endpoint}`;
 
 export function randomUser() {
