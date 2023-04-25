@@ -1,0 +1,120 @@
+plugins {
+    id 'com.google.cloud.tools.jib' version '3.3.1'
+    id 'io.spring.dependency-management' version '1.1.0'
+    id 'org.jetbrains.kotlin.jvm' version '1.8.0'
+    id 'org.jetbrains.kotlin.plugin.spring' version '1.8.0'
+    id 'org.springframework.boot' version '3.0.5'
+    id 'maven-publish'
+}
+
+group = 'com.devaffeine.auth'
+version = '0.0.1-SNAPSHOT'
+description = 'Proof of Concept for SQL-based large scale authentication service'
+
+repositories {
+    mavenCentral()
+    maven { url = uri('https://splunk.jfrog.io/splunk/ext-releases-local') }
+}
+
+ext {
+    jjwtVersion = '0.11.5'
+    micrometerVersion = '1.10.6'
+    r2dbcMysqlVersion = '0.8.2.RELEASE'
+    splunkVersion = '1.11.7'
+    springdocVersion = '2.0.4'
+}
+
+dependencies {
+    implementation 'com.fasterxml.jackson.module:jackson-module-kotlin'
+    implementation "io.jsonwebtoken:jjwt-api:$jjwtVersion"
+    implementation 'io.projectreactor.kotlin:reactor-kotlin-extensions'
+    implementation 'org.jetbrains.kotlin:kotlin-reflect'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-reactor'
+    implementation 'org.liquibase:liquibase-core'
+    implementation "org.springdoc:springdoc-openapi-starter-common:$springdocVersion"
+    implementation "org.springdoc:springdoc-openapi-starter-webflux-ui:$springdocVersion"
+    implementation 'org.springframework.boot:spring-boot-starter-data-r2dbc'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'
+
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+
+    runtimeOnly 'com.mysql:mysql-connector-j'
+    runtimeOnly "com.splunk.logging:splunk-library-javalogging:$splunkVersion"
+    runtimeOnly "dev.miku:r2dbc-mysql:$r2dbcMysqlVersion"
+    runtimeOnly "io.jsonwebtoken:jjwt-impl:$jjwtVersion"
+    runtimeOnly "io.jsonwebtoken:jjwt-jackson:$jjwtVersion"
+    runtimeOnly "io.micrometer:micrometer-registry-prometheus:$micrometerVersion"
+    runtimeOnly 'org.springframework.boot:spring-boot-starter-actuator'
+
+    testImplementation 'io.projectreactor:reactor-test'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.security:spring-security-test'
+
+    testRuntimeOnly 'com.h2database:h2'
+    testRuntimeOnly 'io.r2dbc:r2dbc-h2'
+}
+
+kotlin {
+    jvmToolchain(17)
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
+
+tasks.named('processResources') {
+    expand(project.properties)
+}
+
+def githubActor = System.getenv('GITHUB_ACTOR')
+if (githubActor == null) {
+    githubActor = 'github'
+}
+def githubToken = System.getenv('GITHUB_TOKEN')
+if (githubToken == null) {
+    githubToken = 'github_token'
+}
+
+jib {
+    from {
+        image = 'amazoncorretto:17'
+    }
+    to {
+        image = 'ghcr.io/devaffeine/sb-auth-poc'
+        tags = ["$version", 'latest']
+        auth {
+            username = githubActor
+            password = githubToken
+        }
+    }
+    container {
+        jvmFlags = []
+        mainClass = 'com.devaffeine.auth.AuthApplicationKt'
+        ports = ['8080']
+        format = 'OCI'
+    }
+}
+
+task showVars() {
+    println githubActor
+    println githubToken
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+        }
+    }
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = "https://maven.pkg.github.com/devaffeine/sb-auth-poc"
+            credentials {
+                username = githubActor
+                password = githubToken
+            }
+        }
+    }
+}

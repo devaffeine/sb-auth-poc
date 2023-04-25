@@ -1,0 +1,48 @@
+version: '3.9'
+
+services:
+
+ roach1:
+   hostname: roach1
+   image: cockroachdb/cockroach:latest
+   environment:
+    COCKROACH_DATABASE: auth_db
+   command: start --insecure --join=roach1,roach2,roach3
+   #command: init --certs-dir=/certs
+   volumes:
+     - "${PWD}/data/roach1:/cockroach/cockroach-data"
+
+ roach2:
+   hostname: roach2
+   image: cockroachdb/cockroach:latest
+   environment:
+    COCKROACH_DATABASE: auth_db
+   command: start --insecure --join=roach1,roach2,roach3
+   volumes:
+     - "${PWD}/data/roach2:/cockroach/cockroach-data"
+
+ roach3:
+   hostname: roach3
+   image: cockroachdb/cockroach:latest
+   environment:
+    COCKROACH_DATABASE: auth_db
+   command: start --insecure --join=roach1,roach2,roach3
+   volumes:
+     - "${PWD}/data/roach3:/cockroach/cockroach-data"
+
+ roach4:
+   hostname: roach4
+   image: cockroachdb/cockroach:latest
+   environment:
+     COCKROACH_DATABASE: auth_db
+   command: start --insecure --join=roach1,roach2,roach3
+   volumes:
+     - "${PWD}/data/roach4:/cockroach/cockroach-data"
+
+ proxy:
+   image: haproxy:latest
+   ports:
+     - "26257:26257"
+     - "8080:8080"
+   volumes:
+     - "haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg"
