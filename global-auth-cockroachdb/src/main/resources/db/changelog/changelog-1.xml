@@ -4,9 +4,19 @@
         xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+    <property name="uuid_type" value="uuid" dbms="postgresql"/>
+    <property name="uuid_type" value="uuid" dbms="h2"/>
+    <property name="uuid_type" value="uniqueidentifier" dbms="mssql"/>
+    <property name="uuid_type" value="RAW(16)" dbms="oracle"/>
+
+    <property name="uuid_function" value="uid.uuid_generate_v4()" dbms="postgresql"/>
+    <property name="uuid_function" value="random_uuid()" dbms="h2"/>
+    <property name="uuid_function" value="NEWID()" dbms="mssql"/>
+    <property name="uuid_function" value="sys_guid()" dbms="oracle"/>
+
     <changeSet id="1" author="h4j4x">
         <createTable tableName="auth_user">
-            <column name="id" type="uuid">
+            <column name="id" type="\${uuid_type}" defaultValueComputed="\${uuid_function}">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="username" type="varchar(255)">
