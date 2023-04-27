@@ -32,7 +32,7 @@ class UserService(
 
     fun saveUser(authUser: AuthUser): Mono<AuthUser> {
         val encodedPassword = passwordEncoder.encode(authUser.password)
-        val user = AuthUser(authUser.id, authUser.name, authUser.username, encodedPassword, false)
+        val user = AuthUser(authUser.id, authUser.name, authUser.username, encodedPassword)
         return userRepo.save(user)
             //.timeout(Duration.ofSeconds(1))
             .onErrorMap(AppExceptionHandler::mapException)

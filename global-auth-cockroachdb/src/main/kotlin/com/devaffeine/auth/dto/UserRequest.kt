@@ -14,6 +14,6 @@ class UserRequest(
     password: String,
 ) : AuthRequest(username, password) {
     fun toUser(): AuthUser {
-        return AuthUser(_id = UUID.randomUUID(), name = name, username = username, password = password, _isNew = true)
+        return AuthUser(name = name, username = username, password = password)
     }
 }
