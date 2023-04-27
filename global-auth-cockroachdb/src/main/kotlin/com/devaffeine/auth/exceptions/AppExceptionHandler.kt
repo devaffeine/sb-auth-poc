@@ -1,7 +1,9 @@
 package com.devaffeine.auth.exceptions
 
+import com.devaffeine.auth.controller.AuthController
 import com.fasterxml.jackson.core.JsonProcessingException
 import com.fasterxml.jackson.databind.ObjectMapper
+import org.slf4j.LoggerFactory
 import org.springframework.boot.web.reactive.error.ErrorWebExceptionHandler
 import org.springframework.dao.DuplicateKeyException
 import org.springframework.http.MediaType
@@ -10,10 +12,14 @@ import reactor.core.publisher.Mono
 
 class AppExceptionHandler(private val objectMapper: ObjectMapper) : ErrorWebExceptionHandler {
     companion object {
+        private val logger = LoggerFactory.getLogger(AppExceptionHandler::class.java)
         fun mapException(e: Throwable): AppException {
             return when (e) {
                 is DuplicateKeyException -> UsernameAlreadyExistsException(e)
-                else -> UnknownException(e)
+                else -> {
+                    logger.error(e.message, e);
+                    UnknownException(e)
+                }
             }
         }
     }

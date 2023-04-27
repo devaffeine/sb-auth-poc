@@ -1,19 +1,18 @@
 package com.devaffeine.auth.repository
 
-import com.devaffeine.auth.repository.UserRepository
 import io.r2dbc.spi.ConnectionFactory
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.boot.test.autoconfigure.data.r2dbc.DataR2dbcTest
 import org.springframework.r2dbc.core.DatabaseClient
 import reactor.test.StepVerifier
 import java.time.Duration
+import java.util.UUID
 
 @DataR2dbcTest
-class UserRoRepositoryTests {
+class UserRepositoryTests {
     @Autowired
     lateinit var factory: ConnectionFactory
 
@@ -49,7 +48,8 @@ class UserRoRepositoryTests {
         val username = "user-${System.currentTimeMillis()}"
         val password = "password-${System.currentTimeMillis()}"
         client
-            .sql("INSERT INTO auth_user (name, username, password) VALUES (:name, :username, :password)")
+            .sql("INSERT INTO auth_user (id, name, username, password) VALUES (:id, :name, :username, :password)")
+            .bind("id", UUID.randomUUID())
             .bind("name", username)
             .bind("username", username)
             .bind("password", password)

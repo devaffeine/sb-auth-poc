@@ -3,6 +3,7 @@ package com.devaffeine.auth.dto
 import com.devaffeine.auth.model.AuthUser
 import jakarta.validation.constraints.NotEmpty
 import jakarta.validation.constraints.Size
+import java.util.*
 
 class UserRequest(
     @NotEmpty
@@ -13,6 +14,6 @@ class UserRequest(
     password: String,
 ) : AuthRequest(username, password) {
     fun toUser(): AuthUser {
-        return AuthUser(name = name, username = username, password = password)
+        return AuthUser(_id = UUID.randomUUID(), name = name, username = username, password = password, _isNew = true)
     }
 }
