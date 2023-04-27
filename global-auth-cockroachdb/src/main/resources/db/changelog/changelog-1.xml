@@ -9,7 +9,7 @@
     <property name="uuid_type" value="uniqueidentifier" dbms="mssql"/>
     <property name="uuid_type" value="RAW(16)" dbms="oracle"/>
 
-    <property name="uuid_function" value="uid.uuid_generate_v4()" dbms="postgresql"/>
+    <property name="uuid_function" value="uuid_generate_v4()" dbms="postgresql"/>
     <property name="uuid_function" value="random_uuid()" dbms="h2"/>
     <property name="uuid_function" value="NEWID()" dbms="mssql"/>
     <property name="uuid_function" value="sys_guid()" dbms="oracle"/>
