@@ -1,0 +1,5 @@
+version: "3.9"
+
+services:
+  couchbase1:
+    image: couchbase/server:enterprise-7.1.4
