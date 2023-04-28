@@ -8,7 +8,7 @@ services:
    environment:
     COCKROACH_DATABASE: auth_db
    command: start --insecure --join=roach1,roach2,roach3
-   #command: init --certs-dir=/certs
+   #command: init --insecure
    volumes:
      - "${PWD}/data/roach1:/cockroach/cockroach-data"
 
