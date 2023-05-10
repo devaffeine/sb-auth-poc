@@ -11,6 +11,11 @@ services:
    #command: init --insecure
    volumes:
      - "${PWD}/data/roach1:/cockroach/cockroach-data"
+   deploy:
+     resources:
+       limits:
+         cpus: "1"
+         memory: "1G"
 
  roach2:
    hostname: roach2
@@ -20,6 +25,11 @@ services:
    command: start --insecure --join=roach1,roach2,roach3
    volumes:
      - "${PWD}/data/roach2:/cockroach/cockroach-data"
+   deploy:
+     resources:
+       limits:
+         cpus: "1"
+         memory: "1G"
 
  roach3:
    hostname: roach3
@@ -29,6 +39,11 @@ services:
    command: start --insecure --join=roach1,roach2,roach3
    volumes:
      - "${PWD}/data/roach3:/cockroach/cockroach-data"
+   deploy:
+     resources:
+       limits:
+         cpus: "1"
+         memory: "1G"
 
  roach4:
    hostname: roach4
@@ -38,6 +53,11 @@ services:
    command: start --insecure --join=roach1,roach2,roach3
    volumes:
      - "${PWD}/data/roach4:/cockroach/cockroach-data"
+   deploy:
+     resources:
+       limits:
+         cpus: "1"
+         memory: "1G"
 
  roach5:
    hostname: roach5
@@ -47,6 +67,11 @@ services:
    command: start --insecure --join=roach1,roach2,roach3
    volumes:
      - "${PWD}/data/roach5:/cockroach/cockroach-data"
+   deploy:
+     resources:
+       limits:
+         cpus: "1"
+         memory: "1G"
 
  roach6:
    hostname: roach6
@@ -56,6 +81,11 @@ services:
    command: start --insecure --join=roach1,roach2,roach3
    volumes:
      - "${PWD}/data/roach6:/cockroach/cockroach-data"
+   deploy:
+     resources:
+       limits:
+         cpus: "1"
+         memory: "1G"
 
  roach7:
    hostname: roach7
@@ -65,11 +95,128 @@ services:
    command: start --insecure --join=roach1,roach2,roach3
    volumes:
      - "${PWD}/data/roach7:/cockroach/cockroach-data"
+   deploy:
+     resources:
+       limits:
+         cpus: "1"
+         memory: "1G"
 
- proxy:
+ database-lb:
    image: haproxy:latest
    ports:
      - "26257:26257"
      - "8080:8080"
    volumes:
-     - "${PWD}/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg"
+     - "${PWD}/database-lb.cfg:/usr/local/etc/haproxy/haproxy.cfg"
+
+ auth-service-1:
+   image: ghcr.io/devaffeine/global-auth-cockroachdb
+   environment:
+     JWT_SECRET_KEY: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
+     DB_HOSTNAME: database-lb
+     DB_PORT: 26257
+     DB_NAME: defaultdb
+     DB_USERNAME: root
+     DB_PASSWORD:
+   deploy:
+     resources:
+       limits:
+         cpus: "1"
+         memory: "2G"
+
+ auth-service-2:
+   image: ghcr.io/devaffeine/global-auth-cockroachdb
+   environment:
+     JWT_SECRET_KEY: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
+     DB_HOSTNAME: database-lb
+     DB_PORT: 26257
+     DB_NAME: defaultdb
+     DB_USERNAME: root
+     DB_PASSWORD:
+   deploy:
+     resources:
+       limits:
+         cpus: "1"
+         memory: "2G"
+
+ auth-service-3:
+   image: ghcr.io/devaffeine/global-auth-cockroachdb
+   environment:
+     JWT_SECRET_KEY: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
+     DB_HOSTNAME: database-lb
+     DB_PORT: 26257
+     DB_NAME: defaultdb
+     DB_USERNAME: root
+     DB_PASSWORD:
+   deploy:
+     resources:
+       limits:
+         cpus: "1"
+         memory: "2G"
+
+ auth-service-4:
+   image: ghcr.io/devaffeine/global-auth-cockroachdb
+   environment:
+     JWT_SECRET_KEY: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
+     DB_HOSTNAME: database-lb
+     DB_PORT: 26257
+     DB_NAME: defaultdb
+     DB_USERNAME: root
+     DB_PASSWORD:
+   deploy:
+     resources:
+       limits:
+         cpus: "1"
+         memory: "2G"
+
+ auth-service-5:
+   image: ghcr.io/devaffeine/global-auth-cockroachdb
+   environment:
+     JWT_SECRET_KEY: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
+     DB_HOSTNAME: database-lb
+     DB_PORT: 26257
+     DB_NAME: defaultdb
+     DB_USERNAME: root
+     DB_PASSWORD:
+   deploy:
+     resources:
+       limits:
+         cpus: "1"
+         memory: "2G"
+
+ auth-service-6:
+   image: ghcr.io/devaffeine/global-auth-cockroachdb
+   environment:
+     JWT_SECRET_KEY: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
+     DB_HOSTNAME: database-lb
+     DB_PORT: 26257
+     DB_NAME: defaultdb
+     DB_USERNAME: root
+     DB_PASSWORD:
+   deploy:
+     resources:
+       limits:
+         cpus: "1"
+         memory: "2G"
+
+ auth-service-7:
+   image: ghcr.io/devaffeine/global-auth-cockroachdb
+   environment:
+     JWT_SECRET_KEY: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
+     DB_HOSTNAME: database-lb
+     DB_PORT: 26257
+     DB_NAME: defaultdb
+     DB_USERNAME: root
+     DB_PASSWORD:
+   deploy:
+     resources:
+       limits:
+         cpus: "1"
+         memory: "2G"
+
+ auth-service-lb:
+   image: haproxy:latest
+   ports:
+     - "8090:8090"
+   volumes:
+     - "${PWD}/auth-service-lb.cfg:/usr/local/etc/haproxy/haproxy.cfg"
