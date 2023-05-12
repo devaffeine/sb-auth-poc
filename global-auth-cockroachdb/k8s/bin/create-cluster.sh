@@ -5,6 +5,7 @@ CLUSTER_NAME=global-auth-cockroachdb-cluster
 k3d cluster create $CLUSTER_NAME \
     -v $(pwd)/vol:/var/lib/rancher/k3s/storage@all \
     -a 10 -s 1 \
+    -p "8090:8090@loadbalancer" \
     --registry-create $CLUSTER_NAME-registry.local:0.0.0.0:5000
 
 ###################### Tools ###########################
@@ -58,3 +59,5 @@ helm install myroach --values cfg/cockroachdb/values.yml cockroachdb/cockroachdb
 
 kubectl -n kubernetes-dashboard create token admin-user
 # http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/#/service?namespace=default
+
+kubectl apply -f cfg/auth-app/auth-app.deploy.yml
