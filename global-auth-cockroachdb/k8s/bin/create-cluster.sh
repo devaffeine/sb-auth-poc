@@ -18,8 +18,12 @@ kubectl create -f https://raw.githubusercontent.com/kubernetes/dashboard/$VERSIO
 kubectl apply -f cfg/dashboard/admin.sec.yml
 
 ### Prometheus Monitoring
-# Docs: https://github.com/prometheus-community/helm-charts
-helm install community-prometheus prometheus-community/prometheus
+# Docs:
+#   https://github.com/prometheus-community/helm-charts
+#   https://blog.devops.dev/monitoring-a-spring-boot-application-in-kubernetes-with-prometheus-a2d4ec7f9922
+# helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+# helm repo update
+helm install -f cfg/prometheus/values.yml prometheus prometheus-community/kube-prometheus-stack
 
 ### Splunk
 # Docs: https://operatorhub.io/operator/splunk
