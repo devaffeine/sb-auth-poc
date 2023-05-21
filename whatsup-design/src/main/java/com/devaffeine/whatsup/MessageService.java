@@ -1,5 +1,7 @@
 package com.devaffeine.whatsup;
 
+import java.util.UUID;
+
 public class MessageService {
 
     private PubSub pubSub;
@@ -9,6 +11,6 @@ public class MessageService {
     }
 
     public void sendMessage(String from, String to, String message) {
-        this.pubSub.publish("messages", new Message(from, to, message));
+        this.pubSub.publish("messages", new Message(UUID.randomUUID(), from, to, message));
     }
 }
