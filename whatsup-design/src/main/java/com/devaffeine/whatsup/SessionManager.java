@@ -1,37 +1,35 @@
 package com.devaffeine.whatsup;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
-
 public class SessionManager {
     public record Coord(int gatewayId, int clientId) {
 
     }
 
-    private final static Map<Long, String> users = new ConcurrentHashMap<>();
+    private MemoryDB memoryDB;
 
-    private final static Map<String, Long> sessions = new ConcurrentHashMap<>();
+    public SessionManager(MemoryDB memoryDB) {
+        this.memoryDB = memoryDB;
+    }
 
     public void createSession(int clientId, int gatewayId, String phone) {
         long sessionId = createSessionId(clientId, gatewayId);
-        users.put(sessionId, phone);
-        sessions.put(phone, sessionId);
+        memoryDB.set("session-" + sessionId, phone);
+        memoryDB.set("user-" + phone, sessionId);
     }
 
     public void disconnect(int clientId, int gatewayId) {
-        var user = users.remove(createSessionId(clientId, gatewayId));
+        var user = memoryDB.remove("session-" + createSessionId(clientId, gatewayId));
         if(user != null) {
-            sessions.remove(user);
+            memoryDB.remove("user-" + user);
         }
     }
 
     public String getUser(int clientId, int gatewayId) {
-        return users.get(createSessionId(clientId, gatewayId));
+        return (String) memoryDB.get("session-" + createSessionId(clientId, gatewayId));
     }
 
     public Coord getSession(String phone) {
-        long sessionId = sessions.get(phone);
+        long sessionId = (long)memoryDB.get("user-" + phone);
         return new Coord((int)((sessionId >>> 32)), (int)(sessionId) );
     }
 

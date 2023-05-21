@@ -9,12 +9,13 @@ public class Gateway {
     private int id;
     private Map<Integer, Client> clients = new HashMap<>();
     private Map<Client, Integer> clientIds = new HashMap<>();
-
     private SessionManager sessions;
+    private MessageService messages;
 
-    public Gateway(int id, SessionManager sessions) {
+    public Gateway(int id, SessionManager sessions, MessageService messages) {
         this.id = id;
         this.sessions = sessions;
+        this.messages = messages;
     }
 
     public void connect(Client client) {
@@ -32,5 +33,11 @@ public class Gateway {
         var clientId = clientIds.remove(client);
         clients.remove(clientId);
         sessions.disconnect(clientId, id);
+    }
+
+    public void sendMessage(Client client, String dest, String message) {
+        var clientId = clientIds.get(client);
+        var user = sessions.getUser(clientId, id);
+        this.messages.sendMessage(user, dest, message);
     }
 }
