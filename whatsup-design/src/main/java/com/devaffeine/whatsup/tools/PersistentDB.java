@@ -30,4 +30,8 @@ public class PersistentDB {
     public Object get(String table, Object key) {
         return getTable(table).get(key);
     }
+
+    public int getCount(String table) {
+        return getTable(table).size();
+    }
 }

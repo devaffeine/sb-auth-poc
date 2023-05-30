@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class Client {
     private String phone;
@@ -15,6 +16,8 @@ public class Client {
         this.phone = phone;
         this.gateway.connect(this);
         this.conversation = new HashMap<>();
+        this.received = new HashMap<>();
+        this.sent = new HashMap<>();
     }
 
     public String getPhone() {

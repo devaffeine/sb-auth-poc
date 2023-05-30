@@ -25,21 +25,39 @@ public class LoadTest {
         MessageService messageServ = new MessageService(messageQueue);
         SessionManager sessionManag = new SessionManager(sessionsDb);
         List<Gateway> gateways = createGateways(10, messageServ, sessionManag);
-        List<Client> clients = createClients(100, gateways);
+        List<Client> clients = createClients(10, gateways);
         DelivererService delivererServ = new DelivererService(messageQueue, gateways, sessionManag);
         MessageStorage messageSt = new MessageStorage(messageQueue, messagesDb);
 
-        CountDownLatch latch = new CountDownLatch(100);
         scheduler.scheduleAtFixedRate(() -> {
             var from = clients.get(random.nextInt(clients.size()));
             var to = clients.get(random.nextInt(clients.size()));
             var message = "message-" + UUID.randomUUID();
             System.out.println("Message from: " + from.getPhone() + ", to: " + to.getPhone() + ", body: " + message);
             from.sendMessage(to.getPhone(), message);
-            latch.countDown();
+        }, 1, 10, TimeUnit.MILLISECONDS);
+
+        CountDownLatch finish = new CountDownLatch(1);
+        scheduler.scheduleAtFixedRate(() -> {
+            if(messagesDb.getCount("messages") == 1000) {
+                finish.countDown();
+            }
         }, 1, 1, TimeUnit.SECONDS);
 
-        latch.await();
+        finish.await();
+
+        for (var client : clients) {
+            var contacts = client.getIteractions();
+            if(!contacts.isEmpty()) {
+                System.out.println("Client " + client.getPhone());
+                System.out.println("===============================");
+                for (var contact : contacts) {
+                    System.out.println(" - " + contact + ", sent: " + client.getSent(contact) + ", received: " + client.getReceived(contact));
+                }
+            }
+        }
+
+
     }
 
     private List<Gateway> createGateways(int count, MessageService messageServ, SessionManager sessionManag) {
