@@ -18,6 +18,10 @@ public class Gateway {
         this.messages = messages;
     }
 
+    public int getId() {
+        return id;
+    }
+
     public void connect(Client client) {
         var clientId = ai.incrementAndGet();
         clients.put(clientId, client);
@@ -39,5 +43,12 @@ public class Gateway {
         var clientId = clientIds.get(client);
         var user = sessions.getUser(clientId, id);
         this.messages.sendMessage(user, dest, message);
+    }
+
+    public void deliverMessage(int clientId, String from, String message) {
+        var client = clients.get(clientId);
+        if(client != null) {
+            client.receiveMessage(from, message);
+        }
     }
 }

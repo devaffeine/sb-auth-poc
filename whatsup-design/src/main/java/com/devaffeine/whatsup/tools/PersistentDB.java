@@ -1,9 +1,12 @@
-package com.devaffeine.whatsup;
+package com.devaffeine.whatsup.tools;
 
 import java.util.Map;
 import java.util.NavigableMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentSkipListMap;
+
+//key-value
+//SQL NoSQL tables 0 1 2 3 4
 
 public class PersistentDB {
     public Map<String, NavigableMap<Object, Object>> tables = new ConcurrentHashMap<>();

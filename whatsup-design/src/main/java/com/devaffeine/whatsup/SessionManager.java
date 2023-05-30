@@ -1,5 +1,7 @@
 package com.devaffeine.whatsup;
 
+import com.devaffeine.whatsup.tools.MemoryDB;
+
 public class SessionManager {
     public record Coord(int gatewayId, int clientId) {
 

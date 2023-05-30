@@ -1,5 +1,7 @@
 package com.devaffeine.whatsup;
 
+import com.devaffeine.whatsup.tools.PubSub;
+
 import java.util.UUID;
 
 public class MessageService {

@@ -1,4 +1,4 @@
-package com.devaffeine.whatsup;
+package com.devaffeine.whatsup.tools;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
