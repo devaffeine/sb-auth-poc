@@ -2,6 +2,7 @@ package com.devaffeine.whatsup;
 
 import com.devaffeine.whatsup.tools.PubSub;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 public class MessageService {
@@ -12,7 +13,9 @@ public class MessageService {
         this.pubSub = pubSub;
     }
 
-    public void sendMessage(String from, String to, String message) {
-        this.pubSub.publish("messages", new Message(UUID.randomUUID(), from, to, message));
+    public Message sendMessage(String from, String to, String content) {
+        var message = new Message(UUID.randomUUID(), from, to, content, LocalDateTime.now());
+        this.pubSub.publish("messages", message);
+        return message;
     }
 }

@@ -37,6 +37,6 @@ public class DelivererService {
     private void deliverMessage(Message msg) {
         var toUser = sessionManager.getSession(msg.to());
         var gateway = gatewaysMap.get(toUser.gatewayId());
-        gateway.deliverMessage(toUser.clientId(), msg.from(), msg.content());
+        gateway.deliverMessage(toUser.clientId(), msg);
     }
 }

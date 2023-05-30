@@ -39,16 +39,16 @@ public class Gateway {
         sessions.disconnect(clientId, id);
     }
 
-    public void sendMessage(Client client, String dest, String message) {
+    public Message sendMessage(Client client, String dest, String message) {
         var clientId = clientIds.get(client);
         var user = sessions.getUser(clientId, id);
-        this.messages.sendMessage(user, dest, message);
+        return this.messages.sendMessage(user, dest, message);
     }
 
-    public void deliverMessage(int clientId, String from, String message) {
+    public void deliverMessage(int clientId, Message message) {
         var client = clients.get(clientId);
-        if(client != null) {
-            client.receiveMessage(from, message);
+        if (client != null) {
+            client.receiveMessage(message);
         }
     }
 }
