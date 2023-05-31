@@ -84,12 +84,16 @@ public class LoadTest {
 
         finish.await();
 
+        int totalSent = 0;
+        int totalReceived = 0;
         for (var client : clients) {
             var contacts = client.getIteractions();
             if(!contacts.isEmpty()) {
                 System.out.println("Client " + client.getPhone());
                 System.out.println("===============================");
                 for (var contact : contacts) {
+                    totalSent += client.getSent(contact);
+                    totalReceived += client.getReceived(contact);
                     System.out.println(" - " + contact + ", sent: " + client.getSent(contact) + ", received: " + client.getReceived(contact));
                 }
             }
