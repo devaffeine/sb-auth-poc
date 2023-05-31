@@ -15,16 +15,24 @@ public class Client {
     private Map<String, AtomicInteger> sent;
 
     public Client(String phone, Gateway gateway) {
-        this.gateway = gateway;
         this.phone = phone;
-        this.gateway.connect(this);
         this.conversation = new HashMap<>();
         this.received = new HashMap<>();
         this.sent = new HashMap<>();
+        connect(gateway);
     }
 
     public String getPhone() {
         return phone;
+    }
+
+    public Gateway getGateway() {
+        return gateway;
+    }
+
+    public void connect(Gateway gateway) {
+        this.gateway = gateway;
+        gateway.connect(this);
     }
 
     public void auth() {

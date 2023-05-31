@@ -25,21 +25,59 @@ public class LoadTest {
         MessageService messageServ = new MessageService(messageQueue);
         SessionManager sessionManag = new SessionManager(sessionsDb);
         List<Gateway> gateways = createGateways(10, messageServ, sessionManag);
-        List<Client> clients = createClients(10, gateways);
-        DelivererService delivererServ = new DelivererService(messageQueue, gateways, sessionManag);
+        DelivererService delivererServ = new DelivererService(messageQueue, gateways, sessionManag, messagesDb);
+        gateways.forEach(x -> x.setDeliverer(delivererServ));
         MessageStorage messageSt = new MessageStorage(messageQueue, messagesDb);
+        List<Client> clients = createClients(10, gateways);
+
+        List<Client> disconnected = new ArrayList<>();
+        scheduler.scheduleAtFixedRate(() -> {
+            try {
+                synchronized (disconnected) {
+                    var client = clients.get(random.nextInt(clients.size()));
+                    disconnected.add(client);
+                    clients.remove(client);
+                    client.disconnect();
+                }
+            }
+            catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }, 10, 500, TimeUnit.MILLISECONDS);
 
         scheduler.scheduleAtFixedRate(() -> {
-            var from = clients.get(random.nextInt(clients.size()));
-            var to = clients.get(random.nextInt(clients.size()));
-            var message = "message-" + UUID.randomUUID();
-            System.out.println("Message from: " + from.getPhone() + ", to: " + to.getPhone() + ", body: " + message);
-            from.sendMessage(to.getPhone(), message);
+            try {
+                synchronized (disconnected) {
+                    System.out.println("connecting disconnected clients");
+                    var gateway = gateways.get(random.nextInt(gateways.size()));
+                    disconnected.forEach(x -> {
+                        x.connect(gateway);
+                        x.auth();
+                        clients.add(x);
+                    });
+                    disconnected.clear();
+                }
+            }
+            catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }, 100, 1000, TimeUnit.MILLISECONDS);
+
+        scheduler.scheduleAtFixedRate(() -> {
+            synchronized (disconnected) {
+                var from = clients.get(random.nextInt(clients.size()));
+                var to = clients.get(random.nextInt(clients.size()));
+                var message = "message-" + UUID.randomUUID();
+                System.out.println("Message from: " + from.getPhone() + ", to: " + to.getPhone() + ", body: " + message);
+                from.sendMessage(to.getPhone(), message);
+            }
         }, 1, 10, TimeUnit.MILLISECONDS);
 
         CountDownLatch finish = new CountDownLatch(1);
         scheduler.scheduleAtFixedRate(() -> {
-            if(messagesDb.getCount("messages") == 1000) {
+            int count = messagesDb.getCount("messages");
+            System.out.println("database stored messages: " + count);
+            if(count == 1000) {
                 finish.countDown();
             }
         }, 1, 1, TimeUnit.SECONDS);
@@ -57,7 +95,14 @@ public class LoadTest {
             }
         }
 
+        for (var gateway : gateways) {
+            System.out.println("Gateway " + gateway.getId());
+            System.out.println("===============================");
+            System.out.println(" OfflineDeliverCount: " + gateway.getOfflineDeliverCount());
+        }
 
+        System.out.println("===============================");
+        System.out.println(" Total sent: " + totalSent + ", Total received: " + totalReceived);
     }
 
     private List<Gateway> createGateways(int count, MessageService messageServ, SessionManager sessionManag) {
